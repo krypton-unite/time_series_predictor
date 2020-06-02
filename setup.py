@@ -43,6 +43,9 @@ setuptools.setup(
             'pytest-cov',
             'pandas',
             'seaborn'
+        ],
+        'docs': [
+            'rinohtype'
         ]
     }
 )
