@@ -32,6 +32,7 @@ setuptools.setup(
             'pylint',
             'autopep8',
             'sphinx',
+            'rstcheck',
             'pytest',
             'pandas',
             'seaborn'
