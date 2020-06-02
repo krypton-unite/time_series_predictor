@@ -33,6 +33,7 @@ setuptools.setup(
             'autopep8',
             'sphinx',
             'rstcheck',
+            'rinohtype',
             'pytest',
             'pandas',
             'seaborn'
@@ -44,6 +45,7 @@ setuptools.setup(
             'seaborn'
         ],
         'docs': [
+            'rinohtype'
         ]
     }
 )
