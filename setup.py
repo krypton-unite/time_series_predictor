@@ -37,6 +37,7 @@ setuptools.setup(
         ],
         'test': [
             'pytest',
+            'pytest-cov',
             'pandas',
             'seaborn'
         ]
