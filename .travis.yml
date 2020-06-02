@@ -6,11 +6,10 @@ python:
 before_install:
   - python --version
   - pip install -U pip
-#   - pip install -U pytest
-#   - pip install codecov
+  - pip install codecov
 install:
     - pip install -e .[test] # install package + test dependencies
 script:
     - pytest -s # run tests
 after_success:
-#   - codecov # submit coverage
+  - codecov # submit coverage
