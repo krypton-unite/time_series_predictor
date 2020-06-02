@@ -31,6 +31,7 @@ setuptools.setup(
         'dev': [
             'pylint',
             'autopep8',
+            'sphinx',
             'pytest',
             'pandas',
             'seaborn'

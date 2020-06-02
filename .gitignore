@@ -1,5 +1,5 @@
 # Virtualenv
-.env/
+/.env/
 
 # Package
 *.egg-info
@@ -12,3 +12,6 @@ __pycache__/
 
 # Outputs
 *.pth
+
+# Doc
+/_build
