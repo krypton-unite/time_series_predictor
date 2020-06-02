@@ -14,4 +14,4 @@ __pycache__/
 *.pth
 
 # Doc
-/_build
+docs/_build
