@@ -136,13 +136,11 @@ class TimeSeriesPredictor:
         Does not compute gradient.
 
         Parameters
-        ----------
-        dataloader:
-            Iterator on the dataset.
+            dataloader:
+                Iterator on the dataset.
 
         Returns
-        -------
-        Loss with no grad.
+            Loss with no grad.
         """
         dataloader_length = len(dataloader)
         loss = np.empty(dataloader_length)
@@ -159,12 +157,10 @@ class TimeSeriesPredictor:
         Does not compute gradient.
 
         Parameters
-        ----------
-        dataloader:
-            Iterator on the dataset.
+            dataloader:
+                Iterator on the dataset.
 
         Returns
-        -------
-        Mean loss with no grad.
+            Mean loss with no grad.
         """
         return np.mean(self.compute_loss(dataloader))
