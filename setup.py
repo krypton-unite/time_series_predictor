@@ -39,7 +39,6 @@ setuptools.setup(
             'seaborn'
         ],
         'test': [
-            'rinohtype',
             'pytest',
             'pytest-cov',
             'pandas',
