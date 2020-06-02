@@ -29,9 +29,14 @@ setuptools.setup(
     ],
     extras_require={
         'dev': [
-            'pytest',
             'pylint',
             'autopep8',
+            'pytest',
+            'pandas',
+            'seaborn'
+        ],
+        'test': [
+            'pytest',
             'pandas',
             'seaborn'
         ]
