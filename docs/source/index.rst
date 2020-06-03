@@ -34,9 +34,7 @@ This documents the `python package`_ sourced from the following `repository`_.
 Usage
 *****
 
-Please refer to the following `jupyter notebook`_ as a usage example.
-
-.. _jupyter notebook: https://github.com/DanielAtKrypton/time_series_predictor/blob/master/example.ipynb
+Please refer to the example provided.
 
 **************************
 Documentation for the Code
@@ -45,6 +43,7 @@ Documentation for the Code
    :maxdepth: 2
    
    README.md
+   example.rst
    modules.rst
 
 Indices and tables
