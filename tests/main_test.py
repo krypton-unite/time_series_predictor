@@ -2,8 +2,8 @@
 main test script
 To run issue the command pytest at the root folder of the project.
 """
-from .lstm_tsp import LSTMTimeSeriesPredictor
-from .flights_dataset import FlightsDataset
+from src.lstm_tsp import LSTMTimeSeriesPredictor
+from src.flights_dataset import FlightsDataset
 
 def test_lstm_tsp():
     """

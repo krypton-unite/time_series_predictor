@@ -38,7 +38,9 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'bumpversion',
-            'twine'
+            'twine',
+            'jupyterlab',
+            'matplotlib'
         ],
         'test': [
             'pytest',

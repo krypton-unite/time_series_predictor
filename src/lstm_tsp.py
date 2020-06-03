@@ -3,7 +3,7 @@ lstm_tsp
 """
 import torch
 
-from time_series_predictor.time_series_predictor import TimeSeriesPredictor
+from time_series_predictor import TimeSeriesPredictor
 
 from .model import BenchmarkLSTM
 
