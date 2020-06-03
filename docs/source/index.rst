@@ -19,6 +19,10 @@ Time Series Predictor documentation
    :target: https://codecov.io/gh/DanielAtKrypton/time_series_predictor
    :alt: Code Coverage
 
+.. image:: https://img.shields.io/github/license/DanielAtKrypton/time_series_predictor
+   :target: https://github.com/DanielAtKrypton/time_series_predictor
+   :alt: GitHub license
+
 Welcome to Time Series Predictor's documentation!
 
 This documents the python package sourced from the following `repository`_.
