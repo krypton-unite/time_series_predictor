@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="time_series_predictor",
-    version="0.1.4",
+    version="0.1.5",
     author="Daniel Kaminski de Souza",
     author_email="daniel@kryptonunite.com",
     description="Time Series Predictor",
