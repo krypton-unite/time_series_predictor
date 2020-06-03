@@ -16,8 +16,10 @@ warnings.filterwarnings("default", category=ResourceWarning)
 
 # pylint: disable=too-many-instance-attributes
 class TimeSeriesPredictor:
-    """
-    Network agnostic time series predictor class
+    """Network agnostic time series predictor class
+
+    :param learning_rate:
+    :param epochs:
     """
     def __init__(self, learning_rate, epochs):
         self.learning_rate = learning_rate
@@ -85,33 +87,41 @@ class TimeSeriesPredictor:
         return hist_loss
 
     def get_training_dataframe(self):
-        """
-        get_training_dataframe
+        """get_training_dataframe
+
+        :returns: training dataframe
         """
         return [inp for (inp, out) in self.dataloader]
 
     def make_future_dataframe(self, *args, **kwargs):
-        """
-        make_future_dataframe
+        """make_future_dataframe
+
+        :returns: future dataframe
         """
         return self.dataset.make_future_dataframe(*args, **kwargs)
 
     def forecast(self, *args, **kwargs):
-        """
-        Future forecast
+        """Future forecast
+
+        :param *args: variable length unnamed args list
+        :param **kwargs: variable length named args list
         """
         return self.predict(self.make_future_dataframe(*args, **kwargs))
 
     def predict(self, inp):
-        """
-        Run predictions
+        """Run predictions
+
+        :param inp: input
         """
         with torch.no_grad():
             return self.net(torch.Tensor(inp[np.newaxis, :, :]).to(self.device)).cpu().numpy()
 
     def fit(self, dataset: TimeSeriesDataset, net, loss_function=torch.nn.MSELoss()):
-        """
-        Fit selected network
+        """Fit selected network
+
+        :param dataset: dataset to fit on
+        :param net: network to use
+        :param loss_function: optional loss function to use
         """
         self.net = net
         self._config_fit(dataset, torch.device(
@@ -135,12 +145,8 @@ class TimeSeriesPredictor:
 
         Does not compute gradient.
 
-        Parameters
-            dataloader:
-                Iterator on the dataset.
-
-        Returns
-            Loss with no grad.
+        :param dataloader: iterator on the dataset.
+        :returns: loss with no grad.
         """
         dataloader_length = len(dataloader)
         loss = np.empty(dataloader_length)
@@ -156,11 +162,7 @@ class TimeSeriesPredictor:
 
         Does not compute gradient.
 
-        Parameters
-            dataloader:
-                Iterator on the dataset.
-
-        Returns
-            Mean loss with no grad.
+        :param dataloader: iterator on the dataset.
+        :returns: mean loss with no grad.
         """
         return np.mean(self.compute_loss(dataloader))

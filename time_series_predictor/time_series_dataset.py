@@ -8,6 +8,9 @@ from .min_max_scaler import MinMaxScaler
 class TimeSeriesDataset(Dataset):
     """
     TimeSeriesDataset
+
+    :param _x: input predictor
+    :param _y: output predictor
     """
     def __init__(self, _x, _y, labels):
         super().__init__()
@@ -26,9 +29,15 @@ class TimeSeriesDataset(Dataset):
         return self._x.shape[0]
 
     def get_x_shape(self):
-        """get_x_shape"""
+        """get_x_shape
+
+        :returns: input predictor shape
+        """
         return self._x.shape
 
     def get_y_shape(self):
-        """get_y_shape"""
+        """get_y_shape
+
+        :returns: output predictor shape
+        """
         return self._y.shape

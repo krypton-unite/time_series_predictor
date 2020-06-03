@@ -15,3 +15,6 @@ __pycache__/
 
 # Doc
 docs/build
+
+# Vscode
+/.vscode

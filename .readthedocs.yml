@@ -14,14 +14,14 @@ sphinx:
 #  configuration: mkdocs.yml
 
 # Optionally build your docs in additional formats such as PDF
-# # Don't build any extra formats
-# formats: []
+# Don't build any extra formats
+formats: []
 # # Build PDF & ePub
 # formats:
 #     - epub
 #     - pdf
 # Build all formats
-formats: all
+# formats: all
 
 # Optionally set the version of Python and requirements required to build your docs
 python:

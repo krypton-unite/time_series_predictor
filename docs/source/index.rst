@@ -3,31 +3,52 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Time Series Predictor's documentation!
-=================================================
+###################################
+Time Series Predictor documentation
+###################################
 
+.. image:: https://readthedocs.org/projects/timeseriespredictor/badge/?version=latest
+   :target: https://timeseriespredictor.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://travis-ci.org/DanielAtKrypton/time_series_predictor.svg?branch=master
+   :target: https://travis-ci.org/github/DanielAtKrypton/time_series_predictor
+   :alt: Travis
+
+.. image:: https://codecov.io/gh/DanielAtKrypton/time_series_predictor/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/DanielAtKrypton/time_series_predictor
+   :alt: Code Coverage
+
+Welcome to Time Series Predictor's documentation!
+
+This documents the python package sourced from the following `repository`_.
+
+.. _repository: https://github.com/DanielAtKrypton/time_series_predictor.git
+
+**************************
 Documentation for the Code
 **************************
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-TimeSeriesPredictor main
+TimeSeriesPredictor
 ========================
 .. automodule:: time_series_predictor.time_series_predictor
    :members:
+-----------------------------------------------------------
 
-TimeSeriesPredictor min_max_scaler
+MinMaxScaler
 ==================================
-
 .. automodule:: time_series_predictor.min_max_scaler
    :members:
+-----------------------------------------------------------
 
-TimeSeriesPredictor time_series_dataset
+TimeSeriesDataset
 =======================================
-
 .. automodule:: time_series_predictor.time_series_dataset
    :members:
+-----------------------------------------------------------
 
 
 Indices and tables
