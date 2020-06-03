@@ -25,8 +25,9 @@ Time Series Predictor documentation
 
 Welcome to Time Series Predictor's documentation!
 
-This documents the python package sourced from the following `repository`_.
+This documents the `python package`_ sourced from the following `repository`_.
 
+.. _python package: https://pypi.org/project/time-series-predictor/
 .. _repository: https://github.com/DanielAtKrypton/time_series_predictor.git
 
 *****
