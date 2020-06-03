@@ -31,10 +31,6 @@ setuptools.setup(
         'dev': [
             'pylint',
             'autopep8',
-            'pytest',
-            'pandas',
-            'seaborn',
-            'sklearn',
             'bumpversion',
             'twine',
         ],
@@ -52,6 +48,8 @@ setuptools.setup(
             'nbsphinx',
             'recommonmark',
             'sphinx_rtd_theme',
+            'pandas',
+            'seaborn',
             'jupyterlab',
             'matplotlib'
         ]
