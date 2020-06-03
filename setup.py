@@ -36,7 +36,8 @@ setuptools.setup(
             'rinohtype',
             'pytest',
             'pandas',
-            'seaborn'
+            'seaborn',
+            'bumpversion'
         ],
         'test': [
             'pytest',
