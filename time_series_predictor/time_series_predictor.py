@@ -82,10 +82,11 @@ class TimeSeriesPredictor:
 
                 if train_loss < loss_best:
                     loss_best = train_loss
-                    best_net = self.net.state_dict()
+                    best_net = self.net
         if best_net:
-            torch.save(best_net, self.model_save_path)
+            torch.save(best_net.state_dict(), self.model_save_path)
             print(f"\nmodel exported to {self.model_save_path} with loss {loss_best:5f}")
+            self.net = best_net
         return hist_loss
 
     def get_training_dataframe(self):
