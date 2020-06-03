@@ -29,6 +29,14 @@ This documents the python package sourced from the following `repository`_.
 
 .. _repository: https://github.com/DanielAtKrypton/time_series_predictor.git
 
+*****
+Usage
+*****
+
+Please refer to the following `jupyter notebook`_ as a usage example.
+
+.. _jupyter notebook: https://github.com/DanielAtKrypton/time_series_predictor/blob/master/example.ipynb
+
 **************************
 Documentation for the Code
 **************************
