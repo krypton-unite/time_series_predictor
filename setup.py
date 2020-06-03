@@ -37,8 +37,6 @@ setuptools.setup(
             'sklearn',
             'bumpversion',
             'twine',
-            'jupyterlab',
-            'matplotlib'
         ],
         'test': [
             'pytest',
@@ -53,7 +51,9 @@ setuptools.setup(
             'sphinx-autodoc-typehints',
             'nbsphinx',
             'recommonmark',
-            'sphinx_rtd_theme'
+            'sphinx_rtd_theme',
+            'jupyterlab',
+            'matplotlib'
         ]
     }
 )
