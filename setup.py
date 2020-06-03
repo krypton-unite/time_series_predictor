@@ -37,7 +37,8 @@ setuptools.setup(
             'pytest',
             'pandas',
             'seaborn',
-            'bumpversion'
+            'bumpversion',
+            'twine'
         ],
         'test': [
             'pytest',

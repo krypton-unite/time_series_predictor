@@ -18,3 +18,7 @@ docs/build
 
 # Vscode
 /.vscode
+
+# Package build
+/build
+/dist
