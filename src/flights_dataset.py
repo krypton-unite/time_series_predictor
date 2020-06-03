@@ -34,6 +34,8 @@ def _get_labels(input_features, output_features):
 class FlightsDataset(TimeSeriesDataset):
     """
     FlightsDataset class
+
+    :param except_last_n: initialize the flights dataset without n last months
     """
 
     # pylint: disable=too-many-locals
@@ -68,6 +70,10 @@ class FlightsDataset(TimeSeriesDataset):
     def make_future_dataframe(self, number_of_months, include_history=True):
         """
         make_future_dataframe
+
+        :param number_of_months: number of months to predict ahead
+        :param include_history: optional, selects if training history is to be included or not
+        :returns: future dataframe with the selected amount of months
         """
         def create_dataframe(name, data):
             return pd.DataFrame(data={name: data})

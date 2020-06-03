@@ -34,7 +34,7 @@ This documents the `python package`_ sourced from the following `repository`_.
 Usage
 *****
 
-Please refer to the example provided.
+Please refer to the example provided below.
 
 **************************
 Documentation for the Code
@@ -42,8 +42,8 @@ Documentation for the Code
 .. toctree::
    :maxdepth: 2
    
-   README.md
-   example.rst
+   usage.rst
+   example_modules.rst
    modules.rst
 
 Indices and tables

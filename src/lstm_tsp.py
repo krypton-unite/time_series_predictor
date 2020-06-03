@@ -11,6 +11,11 @@ from .model import BenchmarkLSTM
 class LSTMTimeSeriesPredictor(TimeSeriesPredictor):
     """
     TransformerTimeSeriesPredictor
+
+    :param learning_rate: learning rate of the optimizer
+    :param epochs: number of epochs to spend fitting
+    :param hidden_dim: latent dimension
+    :param num_layers: number of LSTM layers
     """
     def __init__(self,
                  learning_rate=1e-2,
@@ -23,7 +28,12 @@ class LSTMTimeSeriesPredictor(TimeSeriesPredictor):
 
     # pylint: disable=arguments-differ
     def fit(self, dataset, loss_function=torch.nn.MSELoss()):
-        """fit"""
+        """fit
+
+        :param dataset: dataset to fit LSTM on
+        :param loss_function: optional loss function to use
+        :returns: loss history during fitting
+        """
         d_input = dataset.get_x_shape()[2]     # From dataset
         d_output = dataset.get_y_shape()[2]    # From dataset
         net = BenchmarkLSTM(input_dim=d_input, hidden_dim=self.hidden_dim,
