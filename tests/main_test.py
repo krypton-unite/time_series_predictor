@@ -43,3 +43,16 @@ def test_lstm_tsp_forecast():
         y_true = whole_y[-last_n:, idx_output_var]      # get only known future outputs
         y_pred = netout[idx, -last_n:, idx_output_var]  # get only last N predicted outputs
         assert mean_squared_error(y_true, y_pred) < 0.02
+
+def test_lstm_tsp_get_training_dataframe():
+    """
+    Tests the LSTMTimeSeriesPredictor get_training_dataframe
+    """
+    tsp = LSTMTimeSeriesPredictor(epochs=50)
+
+    tsp.fit(FlightsDataset())
+    training_df = tsp.get_training_dataframe()
+
+    idx = np.random.randint(0, len(tsp.dataloader.dataset))
+    inp_df, _ = tsp.dataloader.dataset[idx]
+    assert np.array_equal(training_df[0].cpu().numpy()[idx, :, :], inp_df)

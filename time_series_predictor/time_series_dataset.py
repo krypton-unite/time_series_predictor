@@ -50,4 +50,3 @@ class TimeSeriesDataset(Dataset):
         :param *args: variable length unnamed args list
         :param **kwargs: variable length named args list
         """
-        return
