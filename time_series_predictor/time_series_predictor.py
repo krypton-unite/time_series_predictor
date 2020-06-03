@@ -97,19 +97,21 @@ class TimeSeriesPredictor:
         return [inp for (inp, out) in self.dataloader]
 
     def make_future_dataframe(self, *args, **kwargs):
+        # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
-        :param *args: variable length unnamed args list
-        :param **kwargs: variable length named args list
+        :param \*args: variable length unnamed args list
+        :param \*\*kwargs: variable length named args list
         :returns: future dataframe
         """
         return self.dataset.make_future_dataframe(*args, **kwargs)
 
     def forecast(self, *args, **kwargs):
+        # pylint: disable=anomalous-backslash-in-string
         """Future forecast
 
-        :param *args: variable length unnamed args list
-        :param **kwargs: variable length named args list
+        :param \*args: variable length unnamed args list
+        :param \*\*kwargs: variable length named args list
         """
         return self.predict(self.make_future_dataframe(*args, **kwargs))
 

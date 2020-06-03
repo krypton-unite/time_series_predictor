@@ -20,7 +20,7 @@ pip install -e .[dev]
 
 #### Linux or MacOS
 
-```powershell
+```bash
 virtualenv -p python3 .env
 . .env/bin/activate
 pip install -e .[dev]
@@ -30,7 +30,7 @@ pip install -e .[dev]
 
 ### Test
 
-```terminal
+```bash
 pytest -s
 ```
 
@@ -38,8 +38,7 @@ pytest -s
 
 ### Build docs
 
-```terminal
+```bash
 cd docs
 make html
-sphinx-build -b rinoh source build/rinoh
 ```

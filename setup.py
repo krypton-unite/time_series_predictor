@@ -31,9 +31,6 @@ setuptools.setup(
         'dev': [
             'pylint',
             'autopep8',
-            'sphinx',
-            'rstcheck',
-            'rinohtype',
             'pytest',
             'pandas',
             'seaborn',
@@ -51,7 +48,12 @@ setuptools.setup(
             'sklearn'
         ],
         'docs': [
-            'rinohtype'
+            'sphinx',
+            'rstcheck',
+            'sphinx-autodoc-typehints',
+            'nbsphinx',
+            'recommonmark',
+            'sphinx_rtd_theme'
         ]
     }
 )

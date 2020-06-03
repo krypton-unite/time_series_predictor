@@ -45,8 +45,9 @@ class TimeSeriesDataset(Dataset):
 
     @abc.abstractmethod
     def make_future_dataframe(self, *args, **kwargs):
+        # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
-        :param *args: variable length unnamed args list
-        :param **kwargs: variable length named args list
+        :param \*args: variable length unnamed args list
+        :param \*\*kwargs: variable length named args list
         """
