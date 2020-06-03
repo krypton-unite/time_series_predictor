@@ -23,7 +23,7 @@ def test_lstm_tsp_forecast():
     """
     Tests the LSTMTimeSeriesPredictor forecast
     """
-    tsp = LSTMTimeSeriesPredictor(epochs=2000)
+    tsp = LSTMTimeSeriesPredictor(epochs=1000)
 
     whole_fd = FlightsDataset()
     # leave last N months for error assertion
