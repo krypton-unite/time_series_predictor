@@ -4,7 +4,7 @@
 
 ## Usage
 
-Please refer to the following [jupyter notebook](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/example.ipynb) as a usage example.
+Please refer to the following [jupyter notebook](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/docs/source/notebooks/example.ipynb) as a usage example.
 
 ## Development
 
