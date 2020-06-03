@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from time_series_predictor.time_series_dataset import TimeSeriesDataset
+from time_series_predictor import TimeSeriesDataset
 
 
 def _raw_make_predictor(features, *reshape_args):
