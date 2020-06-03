@@ -96,6 +96,8 @@ class TimeSeriesPredictor:
     def make_future_dataframe(self, *args, **kwargs):
         """make_future_dataframe
 
+        :param *args: variable length unnamed args list
+        :param **kwargs: variable length named args list
         :returns: future dataframe
         """
         return self.dataset.make_future_dataframe(*args, **kwargs)

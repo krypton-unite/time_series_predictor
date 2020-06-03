@@ -37,6 +37,7 @@ setuptools.setup(
             'pytest',
             'pandas',
             'seaborn',
+            'sklearn',
             'bumpversion',
             'twine',
             'jupyterlab',
@@ -46,7 +47,8 @@ setuptools.setup(
             'pytest',
             'pytest-cov',
             'pandas',
-            'seaborn'
+            'seaborn',
+            'sklearn'
         ],
         'docs': [
             'rinohtype'

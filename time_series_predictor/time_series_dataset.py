@@ -2,6 +2,7 @@
 time_series_dataset
 """
 
+import abc
 from torch.utils.data import Dataset
 from .min_max_scaler import MinMaxScaler
 
@@ -41,3 +42,12 @@ class TimeSeriesDataset(Dataset):
         :returns: output predictor shape
         """
         return self._y.shape
+
+    @abc.abstractmethod
+    def make_future_dataframe(self, *args, **kwargs):
+        """make_future_dataframe
+
+        :param *args: variable length unnamed args list
+        :param **kwargs: variable length named args list
+        """
+        return

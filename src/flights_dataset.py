@@ -36,11 +36,13 @@ class FlightsDataset(TimeSeriesDataset):
     FlightsDataset class
     """
 
-    def __init__(self):
+    # pylint: disable=too-many-locals
+    def __init__(self, except_last_n=0):
         flights_dataset = sns.load_dataset("flights")
-        passengers = flights_dataset['passengers']
-        month = flights_dataset['month']
-        year = flights_dataset['year']
+        chopped_flights_dataset = flights_dataset[:len(flights_dataset)-except_last_n]
+        passengers = chopped_flights_dataset['passengers']
+        month = chopped_flights_dataset['month']
+        year = chopped_flights_dataset['year']
 
         month_number = [list(calendar.month_name).index(_month)
                         for _month in month]
@@ -62,6 +64,7 @@ class FlightsDataset(TimeSeriesDataset):
         self.month_number_df = month_number_df
         self.year_df = year_df
 
+    # pylint: disable=arguments-differ
     def make_future_dataframe(self, number_of_months, include_history=True):
         """
         make_future_dataframe
