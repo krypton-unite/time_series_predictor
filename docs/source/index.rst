@@ -43,26 +43,9 @@ Documentation for the Code
 **************************
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-
-TimeSeriesPredictor
-========================
-.. automodule:: time_series_predictor.time_series_predictor
-   :members:
------------------------------------------------------------
-
-MinMaxScaler
-==================================
-.. automodule:: time_series_predictor.min_max_scaler
-   :members:
------------------------------------------------------------
-
-TimeSeriesDataset
-=======================================
-.. automodule:: time_series_predictor.time_series_dataset
-   :members:
------------------------------------------------------------
-
+   
+   README.md
+   modules.rst
 
 Indices and tables
 ==================
