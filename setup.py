@@ -51,7 +51,8 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'jupyterlab',
-            'matplotlib'
+            'matplotlib',
+            '../../src'
         ]
     }
 )
