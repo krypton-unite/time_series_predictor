@@ -25,7 +25,8 @@ setuptools.setup(
     install_requires=[
         'torch',
         'psutil',
-        'tqdm'
+        'tqdm',
+        'skorch'
     ],
     extras_require={
         'dev': [
@@ -33,6 +34,9 @@ setuptools.setup(
             'autopep8',
             'bumpversion',
             'twine',
+            'python-dotenv',
+            'python-dotenv[cli]',
+            'lxml'
         ],
         'test': [
             'pytest',

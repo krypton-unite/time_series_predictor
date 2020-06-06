@@ -21,9 +21,9 @@ class TimeSeriesPredictor:
     :param learning_rate:
     :param epochs:
     """
-    def __init__(self, learning_rate, epochs):
-        self.learning_rate = learning_rate
-        self.epochs = epochs
+    def __init__(self, **neural_net_regressor_params):
+        self.learning_rate = neural_net_regressor_params.get('lr')
+        self.epochs = neural_net_regressor_params.get('max_epochs')
         self.cpu_count = psutil.cpu_count(logical=False)
         self.device = None
         self.net = None
@@ -173,3 +173,6 @@ class TimeSeriesPredictor:
         :returns: mean loss with no grad.
         """
         return np.mean(self.compute_loss(dataloader))
+
+    def score(self):
+        return self.compute_mean_loss(self.dataloader)

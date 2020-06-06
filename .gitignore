@@ -22,3 +22,9 @@ docs/build
 # Package build
 /build
 /dist
+
+# dotenv
+.env.test.local
+
+# datasets
+/datasets

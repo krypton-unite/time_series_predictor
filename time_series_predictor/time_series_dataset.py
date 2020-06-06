@@ -10,38 +10,38 @@ class TimeSeriesDataset(Dataset):
     """
     TimeSeriesDataset
 
-    :param _x: input predictor
-    :param _y: output predictor
+    :param x: input predictor
+    :param y: output predictor
     """
-    def __init__(self, _x, _y, labels):
+    def __init__(self, x, y, labels):
         super().__init__()
         self.labels = labels
         # Normalize x
         self.scaler_x = MinMaxScaler()
-        self._x = self.scaler_x.fit_transform(_x)
+        self.x = self.scaler_x.fit_transform(x)
         # Normalize y
         self.scaler_y = MinMaxScaler()
-        self._y = self.scaler_y.fit_transform(_y)
+        self.y = self.scaler_y.fit_transform(y)
 
     def __getitem__(self, idx):
-        return (self._x[idx], self._y[idx])
+        return (self.x[idx], self.y[idx])
 
     def __len__(self):
-        return self._x.shape[0]
+        return self.x.shape[0]
 
     def get_x_shape(self):
         """get_x_shape
 
         :returns: input predictor shape
         """
-        return self._x.shape
+        return self.x.shape
 
     def get_y_shape(self):
         """get_y_shape
 
         :returns: output predictor shape
         """
-        return self._y.shape
+        return self.y.shape
 
     @abc.abstractmethod
     def make_future_dataframe(self, *args, **kwargs):
