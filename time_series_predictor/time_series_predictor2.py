@@ -1,15 +1,12 @@
 """
 time_series_predictor script
 """
-import datetime
 import warnings
 
 import numpy as np
 import psutil
 import torch
 from skorch import NeuralNetRegressor
-from torch.utils.data import DataLoader
-from tqdm import tqdm
 from .time_series_dataset import TimeSeriesDataset
 
 # Show switch to cpu warning
@@ -57,7 +54,7 @@ class TimeSeriesPredictor:
 
         :param inp: input
         """
-        return np.squeeze(self.neural_net_regressor.predict(inp[np.newaxis, :, :]), axis = 0)
+        return np.squeeze(self.neural_net_regressor.predict(inp[np.newaxis, :, :]), axis=0)
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network
@@ -87,32 +84,32 @@ class TimeSeriesPredictor:
                 self.neural_net_regressor.fit(dataset.x, dataset.y, **fit_params)
             raise
 
-    # def compute_loss(self, dataloader):
-    #     """Compute the loss of a network on a given dataset.
+    def compute_loss(self, dataloader):
+        """Compute the loss of a network on a given dataset.
 
-    #     Does not compute gradient.
+        Does not compute gradient.
 
-    #     :param dataloader: iterator on the dataset.
-    #     :returns: loss with no grad.
-    #     """
-    #     dataloader_length = len(dataloader)
-    #     loss = np.empty(dataloader_length)
-    #     with torch.no_grad():
-    #         for idx_batch, (inp, out) in enumerate(dataloader):
-    #             net_out = self.net(inp.to(self.device))
-    #             loss[idx_batch] = self.loss_function(out.to(self.device), net_out)
+        :param dataloader: iterator on the dataset.
+        :returns: loss with no grad.
+        """
+        dataloader_length = len(dataloader)
+        loss = np.empty(dataloader_length)
+        device = self.neural_net_regressor_params.get('device')
+        for idx_batch, (inp, out) in enumerate(dataloader):
+            net_out = self.neural_net_regressor.predict(inp.to(device))
+            loss[idx_batch] = self.neural_net_regressor.criterion()(out.to(device), torch.Tensor(net_out).to(device))
 
-    #     return loss
+        return loss
 
-    # def compute_mean_loss(self, dataloader):
-    #     """Compute the mean loss of a network on a given dataset.
+    def compute_mean_loss(self, dataloader):
+        """Compute the mean loss of a network on a given dataset.
 
-    #     Does not compute gradient.
+        Does not compute gradient.
 
-    #     :param dataloader: iterator on the dataset.
-    #     :returns: mean loss with no grad.
-    #     """
-    #     return np.mean(self.compute_loss(dataloader))
+        :param dataloader: iterator on the dataset.
+        :returns: mean loss with no grad.
+        """
+        return np.mean(self.compute_loss(dataloader))
 
     # def score(self):
     #     return self.compute_mean_loss(self.dataloader)

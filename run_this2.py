@@ -50,6 +50,8 @@ if __name__ == "__main__":
     ds = FlightsDataset()
     t0 = time.perf_counter()
     tsp.fit(ds)
+    mean_loss = tsp.compute_mean_loss(tsp.neural_net_regressor.get_iterator(tsp.dataset))
+
     print(time.perf_counter()-t0, 'seconds')
     history_length = len(tsp.neural_net_regressor.history)
     train_loss = np.zeros((history_length, 1))
