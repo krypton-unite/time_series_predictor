@@ -12,12 +12,12 @@ from .time_series_dataset import TimeSeriesDataset
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
 
-# pylint: disable=too-many-instance-attributes
 class TimeSeriesPredictor:
     """Network agnostic time series predictor class
 
-    :param learning_rate:
-    :param epochs:
+    Parameters
+    ----------
+    **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
     """
     def __init__(self, **neural_net_regressor_params):
         self.neural_net_regressor = None
@@ -34,8 +34,11 @@ class TimeSeriesPredictor:
         # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
-        :param \*args: variable length unnamed args list
-        :param \*\*kwargs: variable length named args list
+        Parameters
+        ----------
+        *args: variable length unnamed args list
+        **kwargs: variable length named args list
+
         :returns: future dataframe
         """
         return self.dataset.make_future_dataframe(*args, **kwargs)
@@ -44,8 +47,12 @@ class TimeSeriesPredictor:
         # pylint: disable=anomalous-backslash-in-string
         """Future forecast
 
-        :param \*args: variable length unnamed args list
-        :param \*\*kwargs: variable length named args list
+        Parameters
+        ----------
+        *args: variable length unnamed args list
+        **kwargs: variable length named args list
+
+        :returns: future forecast
         """
         return self.predict(self.make_future_dataframe(*args, **kwargs))
 
@@ -59,9 +66,13 @@ class TimeSeriesPredictor:
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network
 
-        :param dataset: dataset to fit on
-        :param net: network to use
-        :param loss_function: optional loss function to use
+        Parameters
+        ----------
+        dataset: dataset to fit on
+        net: network to use
+        **fit_params: dict
+          Additional parameters passed to the forward method of the module and to the
+          self.train_split call.
         """
         print(f"Using device {self.neural_net_regressor_params.get('device')}")
         self.dataset = dataset
@@ -87,8 +98,6 @@ class TimeSeriesPredictor:
     def compute_loss(self, dataloader):
         """Compute the loss of a network on a given dataset.
 
-        Does not compute gradient.
-
         :param dataloader: iterator on the dataset.
         :returns: loss with no grad.
         """
@@ -105,19 +114,7 @@ class TimeSeriesPredictor:
     def compute_mean_loss(self, dataloader):
         """Compute the mean loss of a network on a given dataset.
 
-        Does not compute gradient.
-
         :param dataloader: iterator on the dataset.
         :returns: mean loss with no grad.
         """
         return np.mean(self.compute_loss(dataloader))
-
-    # def score(self):
-    #     return self.compute_mean_loss(self.dataloader)
-
-    # def get_training_dataframe(self):
-    #     """get_training_dataframe
-
-    #     :returns: training dataframe
-    #     """
-    #     return [inp for (inp, out) in self.dataloader]

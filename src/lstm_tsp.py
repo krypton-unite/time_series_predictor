@@ -41,4 +41,4 @@ class LSTMTimeSeriesPredictor(TimeSeriesPredictor):
         d_output = dataset.get_y_shape()[2]    # From dataset
         net = BenchmarkLSTM(input_dim=d_input, hidden_dim=self.hidden_dim,
                             output_dim=d_output, num_layers=self.num_layers)
-        return super().fit(dataset, net, **fit_params)
+        super().fit(dataset, net, **fit_params)
