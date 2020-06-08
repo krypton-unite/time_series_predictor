@@ -17,7 +17,8 @@ class ThreeDMinMaxScaler(MinMaxScaler):
         new_x = np.concatenate(X)
         if not y is None:
             super().fit(new_x, y=np.concatenate(y))
-        super().fit(new_x)
+        else:
+            super().fit(new_x)
 
     def transform(self, X):
         transformed = X

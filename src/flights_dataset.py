@@ -100,4 +100,4 @@ class FlightsDataset(TimeSeriesDataset):
             year_df = year_df.append(
                 create_year_dataframe(new_years), ignore_index=True)
         input_features = [month_number_df, year_df]
-        return self.scaler_x.two_d_transform(_raw_make_predictor(input_features, -1))
+        return scaler.two_d_transform(_raw_make_predictor(input_features, -1))

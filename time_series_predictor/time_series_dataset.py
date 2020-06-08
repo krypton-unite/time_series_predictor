@@ -18,8 +18,8 @@ class TimeSeriesDataset(Dataset):
         super().__init__()
         self.labels = labels
         # Normalize x
-        self.scaler_x = Scaler()
-        self.x = self.scaler_x.fit_transform(_x)
+        # self.scaler_x = Scaler()
+        # self.x = self.scaler_x.fit_transform(_x)
         self.x = _x
         # Normalize y
         self.scaler_y = Scaler()
