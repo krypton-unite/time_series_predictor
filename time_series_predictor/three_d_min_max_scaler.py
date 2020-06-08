@@ -15,7 +15,7 @@ class ThreeDMinMaxScaler(MinMaxScaler):
 
     def fit(self, X, y=None):
         params = [X]
-        if y:
+        if not y is None:
             params.append(y)
         args = map(np.concatenate, params)
         super().fit(*args)
