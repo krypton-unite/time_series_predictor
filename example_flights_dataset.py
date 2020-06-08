@@ -60,9 +60,9 @@ tsp.fit(ds)
 # training_dataframe = tsp.get_training_dataframe()
 
 if config['plot']['training progress']:
-    history_length = len(tsp.neural_net_regressor.history)
+    history_length = len(tsp.pipe['regressor'].history)
     train_loss = np.zeros((history_length, 1))
-    for epoch in tsp.neural_net_regressor.history:
+    for epoch in tsp.pipe['regressor'].history:
         epoch_number = epoch['epoch']-1
         train_loss[epoch_number] = epoch['train_loss']
     plt.figure(figsize=(20, 20))
@@ -78,7 +78,7 @@ if config['plot']['training progress']:
 if config['predict on training data enabled']:
     # Select training example
     idx = np.random.randint(0, len(tsp.dataset))
-    dataloader = tsp.neural_net_regressor.get_iterator(tsp.dataset)
+    dataloader = tsp.pipe['regressor'].get_iterator(tsp.dataset)
     x, y = dataloader.dataset[idx]
 
     # Run predictions
@@ -112,7 +112,7 @@ if config['forecast enabled']:
     d_output = netout.shape[1]
     # Select any training example just for comparison
     idx = np.random.randint(0, len(tsp.dataset))
-    dataloader = tsp.neural_net_regressor.get_iterator(tsp.dataset)
+    dataloader = tsp.pipe['regressor'].get_iterator(tsp.dataset)
     x, y = dataloader.dataset[idx]
     for idx_output_var in range(d_output):
         # Select real passengers data

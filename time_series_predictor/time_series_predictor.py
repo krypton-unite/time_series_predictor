@@ -23,7 +23,6 @@ class TimeSeriesPredictor:
     **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
     """
     def __init__(self, **neural_net_regressor_params):
-        self.neural_net_regressor = None
         self.pipe = None
         self.dataset = None
         self.cpu_count = psutil.cpu_count(logical=False)
@@ -68,16 +67,11 @@ class TimeSeriesPredictor:
         return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
 
     def _config_fit(self, net):
-        neural_net_regressor = NeuralNetRegressor(
-            net,
-            **self.neural_net_regressor_params
-        )
         pipe = Pipeline([
-            # ('scaler', Scaler()),
-            ('net', neural_net_regressor),
+            ('scaler', Scaler()),
+            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params)),
         ])
         self.pipe = pipe
-        self.neural_net_regressor = neural_net_regressor
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network
@@ -116,7 +110,7 @@ class TimeSeriesPredictor:
         device = self.neural_net_regressor_params.get('device')
         for idx_batch, (inp, out) in enumerate(dataloader):
             net_out = self.pipe.predict(inp.to(device))
-            loss[idx_batch] = self.neural_net_regressor.criterion()(
+            loss[idx_batch] = self.pipe['regressor'].criterion()(
                 out.to(device), torch.Tensor(net_out).to(device))
 
         return loss
