@@ -7,9 +7,8 @@ import numpy as np
 import psutil
 import torch
 from sklearn.pipeline import Pipeline
-from skorch import NeuralNetRegressor
+from .scored_nnr import ScoredNnr
 from .time_series_dataset import TimeSeriesDataset
-# from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
 from .min_max_scaler import MinMaxScaler as Scaler
 
 # Show switch to cpu warning
@@ -34,7 +33,6 @@ class TimeSeriesPredictor:
         self.neural_net_regressor_params = neural_net_regressor_params
 
     def make_future_dataframe(self, *args, **kwargs):
-        # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
         Parameters
@@ -47,7 +45,6 @@ class TimeSeriesPredictor:
         return self.dataset.make_future_dataframe(*args, **kwargs)
 
     def forecast(self, *args, **kwargs):
-        # pylint: disable=anomalous-backslash-in-string
         """Future forecast
 
         Parameters
@@ -64,12 +61,12 @@ class TimeSeriesPredictor:
 
         :param inp: input
         """
-        return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
+        return self.pipe.predict(inp)
 
     def _config_fit(self, net):
         self.pipe = Pipeline([
             ('input scaler', Scaler()),
-            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
+            ('regressor', ScoredNnr(net, **self.neural_net_regressor_params))
         ])
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
@@ -98,26 +95,15 @@ class TimeSeriesPredictor:
                 self.pipe.fit(dataset.x, dataset.y, **fit_params)
             raise
 
-    def compute_loss(self, dataloader):
+    def score(self, dataset):
         """Compute the loss of a network on a given dataset.
 
         :param dataloader: iterator on the dataset.
         :returns: loss with no grad.
         """
+        dataloader = self.pipe['regressor'].get_iterator(dataset)
         dataloader_length = len(dataloader)
         loss = np.empty(dataloader_length)
-        device = self.neural_net_regressor_params.get('device')
         for idx_batch, (inp, out) in enumerate(dataloader):
-            net_out = self.pipe.predict(inp.numpy())    #inp.to(device)
-            loss[idx_batch] = self.pipe['regressor'].criterion()(
-                out.to(device), torch.Tensor(net_out).to(device))
-
-        return loss
-
-    def compute_mean_loss(self, dataloader):
-        """Compute the mean loss of a network on a given dataset.
-
-        :param dataloader: iterator on the dataset.
-        :returns: mean loss with no grad.
-        """
-        return np.mean(self.compute_loss(dataloader))
+            loss[idx_batch] = self.pipe.score(np.squeeze(inp, axis=0), np.squeeze(out, axis=0))
+        return np.mean(loss)

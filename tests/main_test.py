@@ -17,7 +17,7 @@ def test_lstm_tsp_fitting():
     tsp = LSTMTimeSeriesPredictor(max_epochs=50, train_split=None, optimizer=torch.optim.Adam)
 
     tsp.fit(FlightsDataset())
-    mean_loss = tsp.compute_mean_loss(tsp.pipe['regressor'].get_iterator(tsp.dataset))
+    mean_loss = tsp.score(tsp.dataset)
     assert mean_loss < 0.080 # 140000
 
 def test_lstm_tsp_forecast():
@@ -30,7 +30,7 @@ def test_lstm_tsp_forecast():
     # leave last N months for error assertion
     last_n = 24
     tsp.fit(FlightsDataset(last_n))
-    mean_loss = tsp.compute_mean_loss(tsp.pipe['regressor'].get_iterator(tsp.dataset))
+    mean_loss = tsp.score(tsp.dataset)
     assert mean_loss < 0.001 # 14000
 
     netout = tsp.forecast(last_n)
