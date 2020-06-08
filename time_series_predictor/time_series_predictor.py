@@ -108,7 +108,7 @@ class TimeSeriesPredictor:
         loss = np.empty(dataloader_length)
         device = self.neural_net_regressor_params.get('device')
         for idx_batch, (inp, out) in enumerate(dataloader):
-            net_out = self.pipe.predict(inp.to(device))
+            net_out = self.pipe['regressor'].predict(inp.to(device))
             loss[idx_batch] = self.pipe['regressor'].criterion()(
                 out.to(device), torch.Tensor(net_out).to(device))
 
