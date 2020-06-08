@@ -105,5 +105,7 @@ class TimeSeriesPredictor:
         dataloader_length = len(dataloader)
         loss = np.empty(dataloader_length)
         for idx_batch, (inp, out) in enumerate(dataloader):
-            loss[idx_batch] = self.pipe.score(np.squeeze(inp, axis=0), np.squeeze(out, axis=0))
+            score_args = [inp, out]
+            squeezed_args = [np.squeeze(arg, axis=0) for arg in score_args]
+            loss[idx_batch] = self.pipe.score(*squeezed_args)
         return np.mean(loss)
