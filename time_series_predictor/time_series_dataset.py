@@ -20,11 +20,11 @@ class TimeSeriesDataset(Dataset):
         # Normalize x
         self.scaler_x = Scaler()
         self.x = self.scaler_x.fit_transform(_x)
-        # self.x = _x
+        self.x = _x
         # Normalize y
         self.scaler_y = Scaler()
         self.y = self.scaler_y.fit_transform(_y)
-        # self.y = _y
+        self.y = _y
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])

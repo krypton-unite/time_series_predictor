@@ -67,7 +67,7 @@ class FlightsDataset(TimeSeriesDataset):
         self.year_df = year_df
 
     # pylint: disable=arguments-differ
-    def make_future_dataframe(self, number_of_months, include_history=True):
+    def make_future_dataframe(self, scaler, number_of_months, include_history=True):
         """
         make_future_dataframe
 

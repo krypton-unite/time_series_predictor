@@ -44,7 +44,7 @@ class TimeSeriesPredictor:
 
         :returns: future dataframe
         """
-        return self.dataset.make_future_dataframe(*args, **kwargs)
+        return self.dataset.make_future_dataframe(self.pipe['scaler'], *args, **kwargs)
 
     def forecast(self, *args, **kwargs):
         # pylint: disable=anomalous-backslash-in-string
@@ -68,7 +68,7 @@ class TimeSeriesPredictor:
 
     def _config_fit(self, net):
         self.pipe = Pipeline([
-            # ('scaler', Scaler()),
+            ('scaler', Scaler()),
             ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
         ])
 
