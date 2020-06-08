@@ -67,7 +67,7 @@ class FlightsDataset(TimeSeriesDataset):
         self.year_df = year_df
 
     # pylint: disable=arguments-differ
-    def make_future_dataframe(self, input_scaler, number_of_months, include_history=True):
+    def make_future_dataframe(self, number_of_months, include_history=True):
         """
         make_future_dataframe
 
@@ -100,4 +100,4 @@ class FlightsDataset(TimeSeriesDataset):
             year_df = year_df.append(
                 create_year_dataframe(new_years), ignore_index=True)
         input_features = [month_number_df, year_df]
-        return input_scaler.two_d_transform(_raw_make_predictor(input_features, -1))
+        return _raw_make_predictor(input_features, -1)

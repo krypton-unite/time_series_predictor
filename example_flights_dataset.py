@@ -133,3 +133,8 @@ if config['forecast enabled']:
             plt.plot(y_true, label="Truth")
             plt.title(tsp.dataset.labels['y'][idx_output_var])
             plt.legend()
+
+
+# %%
+
+

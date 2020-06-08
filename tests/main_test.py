@@ -18,7 +18,7 @@ def test_lstm_tsp_fitting():
 
     tsp.fit(FlightsDataset())
     mean_loss = tsp.compute_mean_loss(tsp.pipe['regressor'].get_iterator(tsp.dataset))
-    assert mean_loss < 0.015 # 140000
+    assert mean_loss < 0.080 # 140000
 
 def test_lstm_tsp_forecast():
     """
@@ -43,7 +43,7 @@ def test_lstm_tsp_forecast():
         # Select real passengers data
         y_true = whole_y[-last_n:, idx_output_var]      # get only known future outputs
         y_pred = netout[-last_n:, idx_output_var]  # get only last N predicted outputs
-        assert mean_squared_error(y_true, y_pred) < 0.02 # 90000
+        assert mean_squared_error(y_true, y_pred) < 0.04 # 90000
 
 # def test_lstm_tsp_get_training_dataframe():
 #     """

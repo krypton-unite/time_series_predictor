@@ -9,8 +9,8 @@ import torch
 from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
 from .time_series_dataset import TimeSeriesDataset
-from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
-# from .min_max_scaler import MinMaxScaler as Scaler
+# from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
+from .min_max_scaler import MinMaxScaler as Scaler
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
@@ -44,7 +44,7 @@ class TimeSeriesPredictor:
 
         :returns: future dataframe
         """
-        return self.dataset.make_future_dataframe(self.pipe['input scaler'], *args, **kwargs)
+        return self.dataset.make_future_dataframe(*args, **kwargs)
 
     def forecast(self, *args, **kwargs):
         # pylint: disable=anomalous-backslash-in-string
@@ -64,7 +64,7 @@ class TimeSeriesPredictor:
 
         :param inp: input
         """
-        return np.squeeze(self.pipe['regressor'].predict(inp[np.newaxis, :, :]), axis=0)
+        return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
 
     def _config_fit(self, net):
         self.pipe = Pipeline([
@@ -108,7 +108,7 @@ class TimeSeriesPredictor:
         loss = np.empty(dataloader_length)
         device = self.neural_net_regressor_params.get('device')
         for idx_batch, (inp, out) in enumerate(dataloader):
-            net_out = self.pipe['regressor'].predict(inp.to(device))
+            net_out = self.pipe.predict(inp.numpy())    #inp.to(device)
             loss[idx_batch] = self.pipe['regressor'].criterion()(
                 out.to(device), torch.Tensor(net_out).to(device))
 
