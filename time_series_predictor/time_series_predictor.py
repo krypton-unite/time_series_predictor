@@ -67,11 +67,10 @@ class TimeSeriesPredictor:
         return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
 
     def _config_fit(self, net):
-        pipe = Pipeline([
+        self.pipe = Pipeline([
             # ('scaler', Scaler()),
-            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params)),
+            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
         ])
-        self.pipe = pipe
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network
