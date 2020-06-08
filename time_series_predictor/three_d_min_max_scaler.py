@@ -14,13 +14,27 @@ class ThreeDMinMaxScaler(MinMaxScaler):
         super().__init__(*args, feature_range=feature_range, copy=copy)
 
     def fit(self, X, y=None):
-        super().fit(np.concatenate(X), np.concatenate(y))
+        params = [X]
+        if y:
+            params.append(y)
+        args = map(np.concatenate, params)
+        super().fit(*args)
 
     def transform(self, X):
         transformed = X
         for sample_index in range(X.shape[0]):
-            transformed[sample_index, :, :] = super().transform(X[sample_index, :, :])
+            transformed[sample_index, :, :] = self.two_d_transform(X[sample_index, :, :])
         return transformed
+
+    def two_d_transform(self, inp):
+        """two_d_transform
+
+        Parameters
+        ----------
+        inp : array-like of shape (n_samples, n_features)
+            Input data that will be transformed.
+        """
+        return super().transform(inp)
 
     #pylint: disable=arguments-differ
     def fit_transform(self, X, y=None):

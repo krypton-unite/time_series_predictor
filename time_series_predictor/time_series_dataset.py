@@ -4,7 +4,8 @@ time_series_dataset
 
 import abc
 from torch.utils.data import Dataset
-from .min_max_scaler import MinMaxScaler
+from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
+# from .min_max_scaler import MinMaxScaler as Scaler
 
 class TimeSeriesDataset(Dataset):
     """
@@ -17,11 +18,13 @@ class TimeSeriesDataset(Dataset):
         super().__init__()
         self.labels = labels
         # Normalize x
-        self.scaler_x = MinMaxScaler()
+        self.scaler_x = Scaler()
         self.x = self.scaler_x.fit_transform(_x)
+        # self.x = _x
         # Normalize y
-        self.scaler_y = MinMaxScaler()
+        self.scaler_y = Scaler()
         self.y = self.scaler_y.fit_transform(_y)
+        # self.y = _y
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])
@@ -45,9 +48,10 @@ class TimeSeriesDataset(Dataset):
 
     @abc.abstractmethod
     def make_future_dataframe(self, *args, **kwargs):
-        # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
-        :param \*args: variable length unnamed args list
-        :param \*\*kwargs: variable length named args list
+        Parameters
+        ----------
+        *args: variable length unnamed args list
+        **kwargs: variable length named args list
         """
