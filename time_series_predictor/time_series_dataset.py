@@ -4,21 +4,24 @@ time_series_dataset
 
 import abc
 from torch.utils.data import Dataset
+from .min_max_scaler import MinMaxScaler
 
 class TimeSeriesDataset(Dataset):
     """
     TimeSeriesDataset
 
-    Parameters
-    ----------
-    param x: input predictor
-    param y: output predictor
+    :param _x: input predictor
+    :param _y: output predictor
     """
-    def __init__(self, x, y, labels):
+    def __init__(self, _x, _y, labels):
         super().__init__()
         self.labels = labels
-        self.x = x
-        self.y = y
+        # Normalize x
+        self.scaler_x = MinMaxScaler()
+        self.x = self.scaler_x.fit_transform(_x)
+        # Normalize y
+        self.scaler_y = MinMaxScaler()
+        self.y = self.scaler_y.fit_transform(_y)
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])
@@ -42,10 +45,9 @@ class TimeSeriesDataset(Dataset):
 
     @abc.abstractmethod
     def make_future_dataframe(self, *args, **kwargs):
+        # pylint: disable=anomalous-backslash-in-string
         """make_future_dataframe
 
-        Parameters
-        ----------
-        *args: variable length unnamed args list
-        **kwargs: variable length named args list
+        :param \*args: variable length unnamed args list
+        :param \*\*kwargs: variable length named args list
         """

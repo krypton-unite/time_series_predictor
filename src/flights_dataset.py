@@ -35,7 +35,7 @@ class FlightsDataset(TimeSeriesDataset):
     """
     FlightsDataset class
 
-    :param except_last_n: initialize the flights dataset without n last months
+    :param except_last_n: initialize the FlightsDataset without n last months
     """
 
     # pylint: disable=too-many-locals
@@ -100,4 +100,4 @@ class FlightsDataset(TimeSeriesDataset):
             year_df = year_df.append(
                 create_year_dataframe(new_years), ignore_index=True)
         input_features = [month_number_df, year_df]
-        return _raw_make_predictor(input_features, -1)
+        return self.scaler_x.transform(_raw_make_predictor(input_features, -1))
