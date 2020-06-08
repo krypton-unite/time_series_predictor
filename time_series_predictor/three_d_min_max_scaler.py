@@ -14,11 +14,10 @@ class ThreeDMinMaxScaler(MinMaxScaler):
         super().__init__(*args, feature_range=feature_range, copy=copy)
 
     def fit(self, X, y=None):
-        params = [X]
+        new_x = np.concatenate(X)
         if not y is None:
-            params.append(y)
-        args = map(np.concatenate, params)
-        super().fit(*args)
+            super().fit(new_x, y=np.concatenate(y))
+        super().fit(new_x)
 
     def transform(self, X):
         transformed = X
@@ -38,5 +37,5 @@ class ThreeDMinMaxScaler(MinMaxScaler):
 
     #pylint: disable=arguments-differ
     def fit_transform(self, X, y=None):
-        self.fit(X, y)
+        self.fit(X, y=y)
         return self.transform(X)
