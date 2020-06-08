@@ -69,8 +69,7 @@ class TimeSeriesPredictor:
     def _config_fit(self, net):
         self.pipe = Pipeline([
             ('input scaler', Scaler()),
-            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params)),
-            ('output scaler', Scaler()),
+            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
         ])
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
