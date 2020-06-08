@@ -9,7 +9,8 @@ import torch
 from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
 from .time_series_dataset import TimeSeriesDataset
-from .three_d_min_max_scaler import ThreeDMinMaxScaler
+from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
+# from .min_max_scaler import MinMaxScaler as Scaler
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
@@ -72,7 +73,7 @@ class TimeSeriesPredictor:
             **self.neural_net_regressor_params
         )
         pipe = Pipeline([
-            # ('scale', ThreeDMinMaxScaler()),
+            # ('scaler', Scaler()),
             ('net', neural_net_regressor),
         ])
         self.pipe = pipe
