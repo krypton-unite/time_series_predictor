@@ -6,8 +6,10 @@ import warnings
 import numpy as np
 import psutil
 import torch
+from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
 from .time_series_dataset import TimeSeriesDataset
+from .three_d_min_max_scaler import ThreeDMinMaxScaler
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
@@ -21,6 +23,7 @@ class TimeSeriesPredictor:
     """
     def __init__(self, **neural_net_regressor_params):
         self.neural_net_regressor = None
+        self.pipe = None
         self.dataset = None
         self.cpu_count = psutil.cpu_count(logical=False)
         if 'device' in neural_net_regressor_params:
@@ -61,7 +64,19 @@ class TimeSeriesPredictor:
 
         :param inp: input
         """
-        return np.squeeze(self.neural_net_regressor.predict(inp[np.newaxis, :, :]), axis=0)
+        return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
+
+    def _config_fit(self, net):
+        neural_net_regressor = NeuralNetRegressor(
+            net,
+            **self.neural_net_regressor_params
+        )
+        pipe = Pipeline([
+            # ('scale', ThreeDMinMaxScaler()),
+            ('net', neural_net_regressor),
+        ])
+        self.pipe = pipe
+        self.neural_net_regressor = neural_net_regressor
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network
@@ -76,23 +91,17 @@ class TimeSeriesPredictor:
         """
         print(f"Using device {self.neural_net_regressor_params.get('device')}")
         self.dataset = dataset
-        self.neural_net_regressor = NeuralNetRegressor(
-            net,
-            **self.neural_net_regressor_params
-        )
+        self._config_fit(net)
         try:
-            self.neural_net_regressor.fit(dataset.x, dataset.y, **fit_params)
+            self.pipe.fit(dataset.x, dataset.y, **fit_params)
         except RuntimeError as err:
             if str(err).startswith('CUDA out of memory.'):
                 warnings.warn(
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.neural_net_regressor_params.setdefault('device', 'cpu')
-                self.neural_net_regressor = NeuralNetRegressor(
-                    net,
-                    **self.neural_net_regressor_params
-                )
-                self.neural_net_regressor.fit(dataset.x, dataset.y, **fit_params)
+                self._config_fit(net)
+                self.pipe.fit(dataset.x, dataset.y, **fit_params)
             raise
 
     def compute_loss(self, dataloader):
@@ -105,7 +114,7 @@ class TimeSeriesPredictor:
         loss = np.empty(dataloader_length)
         device = self.neural_net_regressor_params.get('device')
         for idx_batch, (inp, out) in enumerate(dataloader):
-            net_out = self.neural_net_regressor.predict(inp.to(device))
+            net_out = self.pipe.predict(inp.to(device))
             loss[idx_batch] = self.neural_net_regressor.criterion()(
                 out.to(device), torch.Tensor(net_out).to(device))
 
