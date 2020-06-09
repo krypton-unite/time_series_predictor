@@ -6,6 +6,13 @@ from skorch import NeuralNetRegressor
 import torch
 import numpy as np
 
+def squeezed_predict(model, inp):
+    """Run predictions
+
+    :param inp: input
+    """
+    return np.squeeze(model.predict(inp[np.newaxis, :, :]), axis=0)
+
 class ScoredNnr(NeuralNetRegressor):
     """
     class ScoredNnr
@@ -21,14 +28,7 @@ class ScoredNnr(NeuralNetRegressor):
         super().__init__(module, *args, criterion=criterion, **kwargs)
 
     def score(self, X, y, sample_weight=None):
-        net_out = self.predict(X)
+        net_out = np.squeeze(super().predict(X[np.newaxis, :, :]), axis=0)
         return self.criterion()(
             torch.Tensor(y).to(self.device),
             torch.Tensor(net_out).to(self.device))
-
-    def predict(self, X):
-        """Run predictions
-
-        :param X: input
-        """
-        return np.squeeze(super().predict(X[np.newaxis, :, :]), axis=0)

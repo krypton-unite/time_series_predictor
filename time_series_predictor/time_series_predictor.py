@@ -63,6 +63,13 @@ class TimeSeriesPredictor:
         """
         return self.pipe.predict(inp)
 
+    def sample_predict(self, inp):
+        """Run predictions
+
+        :param inp: input
+        """
+        return np.squeeze(self.pipe.predict(inp[np.newaxis, :, :]), axis=0)
+
     def _config_fit(self, net):
         self.pipe = Pipeline([
             ('input scaler', Scaler()),
