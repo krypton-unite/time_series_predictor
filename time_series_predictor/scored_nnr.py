@@ -28,7 +28,7 @@ class ScoredNnr(NeuralNetRegressor):
         super().__init__(module, *args, criterion=criterion, **kwargs)
 
     def score(self, X, y, sample_weight=None):
-        net_out = np.squeeze(super().predict(X[np.newaxis, :, :]), axis=0)
+        net_out = squeezed_predict(self, X)
         return self.criterion()(
             torch.Tensor(y).to(self.device),
             torch.Tensor(net_out).to(self.device))
