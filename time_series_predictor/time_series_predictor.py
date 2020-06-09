@@ -98,8 +98,8 @@ class TimeSeriesPredictor:
     def score(self, dataset):
         """Compute the loss of a network on a given dataset.
 
-        :param dataloader: iterator on the dataset.
-        :returns: loss with no grad.
+        :param dataset: dataset to evaluate.
+        :returns: mean loss.
         """
         dataloader = self.pipe['regressor'].get_iterator(dataset)
         dataloader_length = len(dataloader)
