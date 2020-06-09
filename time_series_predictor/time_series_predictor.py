@@ -7,7 +7,7 @@ import numpy as np
 import psutil
 import torch
 from sklearn.pipeline import Pipeline
-from .scored_nnr import ScoredNnr, squeezed_predict
+from .scored_nnr import ScoredNnr, sample_predict
 from .time_series_dataset import TimeSeriesDataset
 from .min_max_scaler import MinMaxScaler as Scaler
 
@@ -80,7 +80,7 @@ class TimeSeriesPredictor:
 
         :param inp: input
         """
-        return squeezed_predict(self.pipe, inp)
+        return sample_predict(self.pipe, inp)
 
     def _config_fit(self, net):
         self.pipe = Pipeline([
