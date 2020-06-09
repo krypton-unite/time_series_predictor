@@ -44,6 +44,18 @@ class TimeSeriesPredictor:
         """
         return self.dataset.make_future_dataframe(*args, **kwargs)
 
+    def sample_forecast(self, *args, **kwargs):
+        """Future forecast
+
+        Parameters
+        ----------
+        *args: variable length unnamed args list
+        **kwargs: variable length named args list
+
+        :returns: future forecast
+        """
+        return self.sample_predict(self.make_future_dataframe(*args, **kwargs))
+
     def forecast(self, *args, **kwargs):
         """Future forecast
 

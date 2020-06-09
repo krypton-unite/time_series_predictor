@@ -33,8 +33,8 @@ def test_lstm_tsp_forecast():
     mean_loss = tsp.score(tsp.dataset)
     assert mean_loss < 0.001 # 14000
 
-    netout = tsp.forecast(last_n)
-    d_output = netout.shape[1]
+    netout = tsp.sample_forecast(last_n)
+    d_output = netout.shape[-1]
 
     # Select any training example just for comparison
     idx = np.random.randint(0, len(tsp.dataset))
