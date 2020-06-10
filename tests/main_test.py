@@ -20,6 +20,17 @@ def test_lstm_tsp_fitting():
     mean_loss = tsp.score(tsp.dataset)
     assert mean_loss < 1.7
 
+def test_lstm_tsp_fitting_in_cpu():
+    """
+    Tests the LSTMTimeSeriesPredictor fitting
+    """
+    tsp = LSTMTimeSeriesPredictor(
+        max_epochs=50, train_split=None, optimizer=torch.optim.Adam, device='cpu')
+
+    tsp.fit(FlightsDataset())
+    mean_loss = tsp.score(tsp.dataset)
+    assert mean_loss < 1.7
+
 def test_lstm_tsp_forecast():
     """
     Tests the LSTMTimeSeriesPredictor forecast
