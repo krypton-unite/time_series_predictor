@@ -31,6 +31,7 @@ pip install -e .[dev]
 ### Test
 
 ```bash
+pip install -e .[test]
 pytest -s
 ```
 
@@ -39,6 +40,7 @@ pytest -s
 ### Build docs
 
 ```bash
+pip install -e .[docs]
 cd docs
 make html
 ```
