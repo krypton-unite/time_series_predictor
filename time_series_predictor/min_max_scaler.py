@@ -3,7 +3,8 @@ min_max_scaler
 """
 
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.base import TransformerMixin
+from .sklearn import BaseEstimator
 
 class MinMaxScaler(BaseEstimator, TransformerMixin):
     """
@@ -45,3 +46,12 @@ class MinMaxScaler(BaseEstimator, TransformerMixin):
         :returns: transformed matrix
         """
         return (X - self.min) / (self.max - self.min + np.finfo(float).eps)
+
+    def inverse_transform(self, transformed):
+        """
+        inverse_transform
+
+        :param transformed: transformed input
+        :returns: inverse transformed
+        """
+        return self.min + transformed*(self.max - self.min)

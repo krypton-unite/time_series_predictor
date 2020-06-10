@@ -13,15 +13,14 @@ class TimeSeriesDataset(Dataset):
 
     :param _x: input predictor
     :param _y: output predictor
+    :param labels: predictors labels
     """
     # pylint: disable=invalid-name
     def __init__(self, _x, _y, labels):
         super().__init__()
         self.labels = labels
         self.x = _x
-        # Normalize y
-        self.scaler_y = Scaler()
-        self.y = self.scaler_y.fit_transform(_y)
+        self.y = _y
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])

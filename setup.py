@@ -26,7 +26,8 @@ setuptools.setup(
         'torch',
         'psutil',
         'tqdm',
-        'skorch'
+        'skorch',
+        'scipy'
     ],
     extras_require={
         'dev': [

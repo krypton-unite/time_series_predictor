@@ -11,5 +11,5 @@ if __name__ == "__main__":
     tsp = LSTMTimeSeriesPredictor(max_epochs=50, train_split=None, optimizer=torch.optim.Adam)
 
     tsp.fit(FlightsDataset())
-    mean_loss = tsp.compute_mean_loss(tsp.pipe['regressor'].get_iterator(tsp.dataset))
-    assert mean_loss < 140000
+    mean_loss = tsp.score(tsp.dataset)
+    assert mean_loss < 2
