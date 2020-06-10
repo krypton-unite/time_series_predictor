@@ -32,10 +32,6 @@ class MinMaxScaler(BaseEstimator, TransformerMixin):
         :param input_matrix: input matrix
         :returns: transformed matrix
         """
-        if y is None:
-            # fit method of arity 1 (unsupervised transformation)
-            return self.fit(X, **fit_params).transform(X)
-        # fit method of arity 2 (supervised transformation)
         return self.fit(X, y, **fit_params).transform(X)
 
     # pylint: disable=invalid-name

@@ -7,14 +7,15 @@ import numpy as np
 import psutil
 import torch
 from sklearn.pipeline import Pipeline
+from skorch import NeuralNetRegressor
 
 from .min_max_scaler import MinMaxScaler as Scaler
-from .scored_nnr import ScoredNnr, sample_predict
+from .sklearn import TransformedTargetRegressor, sample_predict
 from .time_series_dataset import TimeSeriesDataset
-from .sklearn import TransformedTargetRegressor
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
+
 
 class TimeSeriesPredictor:
     """Network agnostic time series predictor class
@@ -23,6 +24,7 @@ class TimeSeriesPredictor:
     ----------
     **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
     """
+
     def __init__(self, **neural_net_regressor_params):
         self.ttr = None
         self.dataset = None
@@ -87,9 +89,10 @@ class TimeSeriesPredictor:
     def _config_fit(self, net):
         pipe = Pipeline([
             ('input scaler', Scaler()),
-            ('regressor', ScoredNnr(net, **self.neural_net_regressor_params))
+            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
         ])
-        self.ttr = TransformedTargetRegressor(regressor=pipe, transformer=Scaler())
+        self.ttr = TransformedTargetRegressor(
+            regressor=pipe, transformer=Scaler())
 
     def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
         """Fit selected network

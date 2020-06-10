@@ -44,7 +44,6 @@ def test_lstm_tsp_forecast():
         y_true = whole_y[-last_n:, idx_output_var]      # get only known future outputs
         y_pred = netout[-last_n:, idx_output_var]  # get only last N predicted outputs
         mse = mean_squared_error(y_true, y_pred)
-        print(mse)
         assert mse < 10000
 
 # def test_lstm_tsp_get_training_dataframe():

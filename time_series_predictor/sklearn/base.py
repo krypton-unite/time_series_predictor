@@ -23,7 +23,7 @@ from sklearn.utils.validation import check_X_y
 from sklearn.utils.validation import check_array
 from sklearn.utils._estimator_html_repr import estimator_html_repr
 from sklearn.utils.validation import _deprecate_positional_args
-from ..scored_nnr import sample_predict
+from .novel import sample_predict
 
 _DEFAULT_TAGS = {
     'non_deterministic': False,
