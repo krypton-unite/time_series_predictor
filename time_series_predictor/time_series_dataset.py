@@ -4,8 +4,6 @@ time_series_dataset
 
 import abc
 from torch.utils.data import Dataset
-# from .three_d_min_max_scaler import ThreeDMinMaxScaler as Scaler
-from .min_max_scaler import MinMaxScaler as Scaler
 
 class TimeSeriesDataset(Dataset):
     """
