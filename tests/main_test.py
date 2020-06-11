@@ -6,15 +6,21 @@ import numpy as np
 
 import torch
 from sklearn.metrics import mean_squared_error
+from time_series_predictor import TimeSeriesPredictor
+from src.model import BenchmarkLSTM
 from src.flights_dataset import FlightsDataset
-from src.lstm_tsp import LSTMTimeSeriesPredictor
 
 
 def test_lstm_tsp_fitting():
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
-    tsp = LSTMTimeSeriesPredictor(max_epochs=50, train_split=None, optimizer=torch.optim.Adam)
+    tsp = TimeSeriesPredictor(
+        BenchmarkLSTM(),
+        max_epochs=50,
+        train_split=None,
+        optimizer=torch.optim.Adam
+    )
 
     tsp.fit(FlightsDataset())
     mean_loss = tsp.score(tsp.dataset)
@@ -24,8 +30,13 @@ def test_lstm_tsp_fitting_in_cpu():
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
-    tsp = LSTMTimeSeriesPredictor(
-        max_epochs=50, train_split=None, optimizer=torch.optim.Adam, device='cpu')
+    tsp = TimeSeriesPredictor(
+        BenchmarkLSTM(),
+        max_epochs=50,
+        train_split=None,
+        optimizer=torch.optim.Adam,
+        device='cpu'
+    )
 
     tsp.fit(FlightsDataset())
     mean_loss = tsp.score(tsp.dataset)
@@ -35,7 +46,12 @@ def test_lstm_tsp_forecast():
     """
     Tests the LSTMTimeSeriesPredictor forecast
     """
-    tsp = LSTMTimeSeriesPredictor(max_epochs=1000, train_split=None, optimizer=torch.optim.Adam)
+    tsp = TimeSeriesPredictor(
+        BenchmarkLSTM(),
+        max_epochs=1000,
+        train_split=None,
+        optimizer=torch.optim.Adam
+    )
 
     whole_fd = FlightsDataset()
     # leave last N months for error assertion
@@ -61,7 +77,12 @@ def test_lstm_tsp_forecast():
 #     """
 #     Tests the LSTMTimeSeriesPredictor get_training_dataframe
 #     """
-#     tsp = LSTMTimeSeriesPredictor(max_epochs=50)
+#     tsp = TimeSeriesPredictor(
+#         BenchmarkLSTM(),
+#         max_epochs=50,
+#         train_split=None,
+#         optimizer=torch.optim.Adam
+#     )
 
 #     tsp.fit(FlightsDataset())
 #     training_df = tsp.get_training_dataframe()

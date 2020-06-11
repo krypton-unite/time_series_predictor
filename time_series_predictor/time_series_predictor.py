@@ -8,6 +8,7 @@ import psutil
 import torch
 from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
+from skorch.callbacks import Callback
 
 from .min_max_scaler import MinMaxScaler as Scaler
 from .sklearn import TransformedTargetRegressor, sample_predict
@@ -16,6 +17,19 @@ from .time_series_dataset import TimeSeriesDataset
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
 
+class InputShapeSetter(Callback):
+    """InputShapeSetter
+    dynamically set the input size of the PyTorch module based on the data
+
+    Typically, it’s up to the user to determine the shape of the input data when defining
+    the PyTorch module. This can sometimes be inconvenient, e.g. when the shape is only
+    known at runtime. E.g., when using :class:`sklearn.feature_selection.VarianceThreshold`,
+    you cannot know the number of features in advance. The best solution would be to set
+    the input size dynamically.
+    """
+    def on_train_begin(self, net, X=None, y=None, **kwargs):
+        net.set_params(module__input_dim=X.shape[-1],
+                       module__output_dim=y.shape[-1])
 
 class TimeSeriesPredictor:
     """Network agnostic time series predictor class
@@ -25,8 +39,7 @@ class TimeSeriesPredictor:
     **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
     """
 
-    def __init__(self, **neural_net_regressor_params):
-        self.ttr = None
+    def __init__(self, net, **neural_net_regressor_params):
         self.dataset = None
         self.cpu_count = psutil.cpu_count(logical=False)
         if 'device' in neural_net_regressor_params:
@@ -34,6 +47,23 @@ class TimeSeriesPredictor:
         else:
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
         neural_net_regressor_params.setdefault('device', device)
+
+        self.ttr = TransformedTargetRegressor(
+            regressor=Pipeline(
+                [
+                    ('input scaler', Scaler()),
+                    (
+                        'regressor', NeuralNetRegressor(
+                            net,
+                            callbacks=[InputShapeSetter()],
+                            **neural_net_regressor_params
+                        )
+                    )
+                ]
+            ),
+            transformer=Scaler()
+        )
+
         self.neural_net_regressor_params = neural_net_regressor_params
 
     def make_future_dataframe(self, *args, **kwargs):
@@ -86,15 +116,7 @@ class TimeSeriesPredictor:
         """
         return sample_predict(self.ttr, inp)
 
-    def _config_fit(self, net):
-        pipe = Pipeline([
-            ('input scaler', Scaler()),
-            ('regressor', NeuralNetRegressor(net, **self.neural_net_regressor_params))
-        ])
-        self.ttr = TransformedTargetRegressor(
-            regressor=pipe, transformer=Scaler())
-
-    def fit(self, dataset: TimeSeriesDataset, net, **fit_params):
+    def fit(self, dataset: TimeSeriesDataset, **fit_params):
         """Fit selected network
 
         Parameters
@@ -107,7 +129,6 @@ class TimeSeriesPredictor:
         """
         print(f"Using device {self.neural_net_regressor_params.get('device')}")
         self.dataset = dataset
-        self._config_fit(net)
         try:
             self.ttr.fit(dataset.x, dataset.y, **fit_params)
         except RuntimeError as err:
@@ -116,7 +137,11 @@ class TimeSeriesPredictor:
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.neural_net_regressor_params.setdefault('device', 'cpu')
-                self._config_fit(net)
+                self.ttr.regressor['regressor'] = NeuralNetRegressor(
+                    self.ttr.regressor['regressor'].module,
+                    callbacks=[InputShapeSetter()],
+                    **self.neural_net_regressor_params
+                )
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
             raise
 
