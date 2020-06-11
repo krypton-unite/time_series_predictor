@@ -23,6 +23,7 @@ from sklearn.utils.validation import check_X_y
 from sklearn.utils.validation import check_array
 from sklearn.utils._estimator_html_repr import estimator_html_repr
 from sklearn.utils.validation import _deprecate_positional_args
+# REVIEW check this out
 from .novel import sample_predict
 
 _DEFAULT_TAGS = {
@@ -498,7 +499,7 @@ class ClassifierMixin:
         """
         from sklearn.metrics import accuracy_score
         # return accuracy_score(y, self.predict(X), sample_weight=sample_weight)
-        # TODO check this out
+        # REVIEW check this out
         return accuracy_score(y, sample_predict(self, X), sample_weight=sample_weight)
 
     def _more_tags(self):
@@ -552,7 +553,7 @@ class RegressorMixin:
 
         from sklearn.metrics import r2_score
         # y_pred = self.predict(X)
-        # TODO check this out
+        # REVIEW check this out
         y_pred = sample_predict(self, X)
         return r2_score(y, y_pred, sample_weight=sample_weight)
 
@@ -743,7 +744,7 @@ class OutlierMixin:
         """
         # override for transductive outlier detectors like LocalOulierFactor
         # return self.fit(X).predict(X)
-        # TODO check this out
+        # REVIEW check this out
         return sample_predict(self.fit(X), X)
 
 class MetaEstimatorMixin:

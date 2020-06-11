@@ -199,7 +199,7 @@ def _rescale_data(X, y, sample_weight):
         sample_weight = np.full(n_samples, sample_weight,
                                 dtype=sample_weight.dtype)
     sample_weight = np.sqrt(sample_weight)
-    # TODO check if this is alright.
+    # REVIEW check if this is alright.
     sw_matrix = sp.dia_matrix((sample_weight, 0),
                               shape=(n_samples, n_samples))
     X = safe_sparse_dot(sw_matrix, X)
@@ -530,10 +530,10 @@ class LinearRegression(MultiOutputMixin, RegressorMixin, LinearModel):
             def rmatvec(b):
                 return X.T.dot(b) - X_offset_scale * np.sum(b)
 
-            # TODO check this out, it had sparse rather than sp before
+            # REVIEW check this out, it had sparse rather than sp before
             X_centered = sp.linalg.LinearOperator(shape=X.shape,
-                                                      matvec=matvec,
-                                                      rmatvec=rmatvec)
+                                                  matvec=matvec,
+                                                  rmatvec=rmatvec)
 
             if y.ndim < 2:
                 out = sparse_lsqr(X_centered, y)
@@ -569,7 +569,7 @@ def _pre_fit(X, y, Xy, precompute, normalize, fit_intercept, copy,
     """
     n_samples, n_features = X.shape
 
-    # TODO check this out, it had sparse rather than sp before
+    # REVIEW check this out, it had sparse rather than sp before
     if sp.isspmatrix(X):
         # copy is not needed here as X is not modified inplace when X is sparse
         precompute = False
