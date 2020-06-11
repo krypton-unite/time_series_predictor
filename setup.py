@@ -1,7 +1,23 @@
 """
 Setup
 """
+import os
 import setuptools
+
+
+def package_files(directory):
+    """package_files
+
+    recursive method which will lets you set the
+    package_data parameter in the setup call.
+    """
+    paths = []
+    for (path, _, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append(os.path.join('..', path, filename))
+    return paths
+
+extra_files = package_files('time_series_predictor/sklearn')
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -16,6 +32,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
     packages=['time_series_predictor'],
+    package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
