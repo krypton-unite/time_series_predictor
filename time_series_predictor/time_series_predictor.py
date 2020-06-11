@@ -3,7 +3,6 @@ time_series_predictor script
 """
 import warnings
 
-import numpy as np
 import psutil
 import torch
 from sklearn.pipeline import Pipeline
@@ -146,16 +145,17 @@ class TimeSeriesPredictor:
             raise
 
     def score(self, dataset):
-        """Compute the loss of a network on a given dataset.
+        """Compute the mean r2_score of a network on a given dataset.
 
         :param dataset: dataset to evaluate.
-        :returns: mean loss.
+        :returns: mean r2_score.
         """
-        dataloader = self.ttr.regressor['regressor'].get_iterator(dataset)
-        dataloader_length = len(dataloader)
-        loss = np.empty(dataloader_length)
-        for idx_batch, (inp, out) in enumerate(dataloader):
-            score_args = [inp, out]
-            squeezed_args = [np.squeeze(arg, axis=0) for arg in score_args]
-            loss[idx_batch] = self.ttr.score(*squeezed_args)
-        return np.mean(loss)
+        losses = [
+            self.ttr.score(
+                inp,
+                out
+            ) for (inp, out) in dataset
+        ]
+        assert all(loss <= 1 for loss in losses)
+        device = self.neural_net_regressor_params.get('device')
+        return torch.mean(torch.Tensor(losses).to(device)).cpu().numpy().take(0)
