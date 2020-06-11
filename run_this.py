@@ -17,5 +17,6 @@ if __name__ == "__main__":
     )
 
     tsp.fit(FlightsDataset())
+    print(tsp.ttr.regressor_['regressor'].history)
     mean_loss = tsp.score(tsp.dataset)
     assert mean_loss < 2
