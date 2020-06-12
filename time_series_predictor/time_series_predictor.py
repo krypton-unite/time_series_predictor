@@ -1,6 +1,8 @@
 """
 time_series_predictor script
 """
+import queue
+import threading
 import warnings
 
 import psutil
@@ -40,7 +42,7 @@ class TimeSeriesPredictor:
 
     def __init__(self, net, **neural_net_regressor_params):
         self.dataset = None
-        self.cpu_count = psutil.cpu_count(logical=False)
+        self.cpu_count = psutil.cpu_count(logical=True)
         if 'device' in neural_net_regressor_params:
             device = neural_net_regressor_params.get('device')
         else:
@@ -150,12 +152,67 @@ class TimeSeriesPredictor:
         :param dataset: dataset to evaluate.
         :returns: mean r2_score.
         """
-        losses = [
-            self.ttr.score(
-                inp,
-                out
-            ) for (inp, out) in dataset
-        ]
-        assert all(loss <= 1 for loss in losses)
+        dataset_length = len(dataset)
+        if dataset_length == 1:
+            # losses = [
+            #     self.ttr.score(
+            #         inp,
+            #         out
+            #     ) for (inp, out) in dataset
+            # ]
+            inp, out = dataset[0]
+            return self.ttr.score(inp, out)
+        scores_to_calculate = queue.Queue()
+        locks = [threading.Lock() for _ in range(2)]
+        for idx, (inp, out) in enumerate(dataset):
+            scores_to_calculate.put([idx, (inp, out)])
+        output_list = []
+        score_calculators = []
+        for _ in range(dataset_length if dataset_length < self.cpu_count else self.cpu_count):
+            score_calculator = ScoreCalculator(
+                scores_to_calculate,
+                locks,
+                self.ttr.score,
+                output_list
+            )
+            score_calculators.append(score_calculator)
+        for score_calculator in score_calculators:
+            score_calculator.start()
+        for score_calculator in score_calculators:
+            score_calculator.join()
+        losses = [loss[1] for loss in output_list]
+        # assert all(loss <= 1 for loss in losses)
+
         device = self.neural_net_regressor_params.get('device')
         return torch.mean(torch.Tensor(losses).to(device)).cpu().numpy().take(0)
+
+class ScoreCalculator(threading.Thread):
+    """ScoreCalculator
+    Spread computational effort across cpus
+    """
+    def __init__(self, scores_to_calculate, locks, score_method, output_list):
+        super().__init__()
+        # print("Web Crawler Worker Started: {}".format(threading.current_thread()))
+        self.scores_to_calculate = scores_to_calculate
+        self.locks = locks
+        self.score_method = score_method
+        self.output_list = output_list
+
+    def run(self):
+        while True:
+            if self.scores_to_calculate.empty():
+                return
+            self.locks[0].acquire()
+            score_to_calculate = self.scores_to_calculate.get()
+            self.locks[0].release()
+
+            r2_score = self.score_method(*score_to_calculate[1])
+            record = [score_to_calculate[0], r2_score]
+
+            self.locks[1].acquire()
+            self.output_list.append(record)
+            self.locks[1].release()
+
+            self.locks[0].acquire()
+            self.scores_to_calculate.task_done()
+            self.locks[0].release()
