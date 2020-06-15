@@ -30,7 +30,7 @@ from time_series_predictor import TimeSeriesPredictor
 if __name__ == "__main__":
     tsp = TimeSeriesPredictor(
         BenchmarkLSTM(),
-        max_epochs=500,
+        max_epochs=50,
         train_split=None,  # default = skorch.dataset.CVSplit(5)
         optimizer=torch.optim.Adam
     )
@@ -38,5 +38,4 @@ if __name__ == "__main__":
 
     tsp.fit(dataset)
     mean_r2_score = tsp.score(dataset)
-    print(mean_r2_score)
-    # assert mean_r2_score > 0.75
+    assert mean_r2_score > 0.75
