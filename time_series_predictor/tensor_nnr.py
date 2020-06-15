@@ -16,4 +16,3 @@ class TensorNeuralNetRegressor(NeuralNetRegressor):
         self.device = kwargs.get('device')
     def predict(self, X):
         return torch.tensor(super().predict(X), dtype=torch.float64).to(self.device)
-    
