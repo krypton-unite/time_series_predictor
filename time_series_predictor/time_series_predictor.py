@@ -7,12 +7,12 @@ import warnings
 
 import psutil
 import torch
-from .tensor_nnr import TensorNeuralNetRegressor
 from skorch.callbacks import Callback
 
-from .custom_sklearn import TransformedTargetRegressor, sample_predict
-from .custom_sklearn.pipeline import Pipeline
 from .min_max_scaler import MinMaxScaler as Scaler
+from .sklearn import TransformedTargetRegressor, sample_predict
+from .sklearn.pipeline import Pipeline
+from .tensor_nnr import TensorNeuralNetRegressor
 from .time_series_dataset import TimeSeriesDataset
 
 # Show switch to cpu warning

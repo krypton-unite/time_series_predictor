@@ -215,18 +215,14 @@ class LinearModel(BaseEstimator, metaclass=ABCMeta):
     def fit(self, X, y):
         """Fit model."""
 
-    def _decision_function(self, X: torch.Tensor):
+    def _decision_function(self, X):
         check_is_fitted(self)
 
-        print(X)
         X = check_array(X, accept_sparse=['csr', 'csc', 'coo'])
-        print(X)
-        print(safe_sparse_dot(X, self.coef_.T,
-              dense_output=True) + self.intercept_)
         return safe_sparse_dot(X, self.coef_.T,
                                dense_output=True) + self.intercept_
 
-    def predict(self, X: torch.Tensor):
+    def predict(self, X):
         """
         Predict using the linear model.
 
