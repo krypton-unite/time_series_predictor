@@ -17,6 +17,7 @@ import numbers
 import warnings
 from abc import ABCMeta, abstractmethod
 
+import torch
 import numpy as np
 import scipy.sparse as sp
 from joblib import Parallel, delayed
@@ -214,14 +215,18 @@ class LinearModel(BaseEstimator, metaclass=ABCMeta):
     def fit(self, X, y):
         """Fit model."""
 
-    def _decision_function(self, X):
+    def _decision_function(self, X: torch.Tensor):
         check_is_fitted(self)
 
+        print(X)
         X = check_array(X, accept_sparse=['csr', 'csc', 'coo'])
+        print(X)
+        print(safe_sparse_dot(X, self.coef_.T,
+              dense_output=True) + self.intercept_)
         return safe_sparse_dot(X, self.coef_.T,
                                dense_output=True) + self.intercept_
 
-    def predict(self, X):
+    def predict(self, X: torch.Tensor):
         """
         Predict using the linear model.
 

@@ -551,7 +551,7 @@ class RegressorMixin:
         :class:`~sklearn.multioutput.MultiOutputRegressor`).
         """
 
-        from sklearn.metrics import r2_score
+        from .metrics import r2_score
         # y_pred = self.predict(X)
         # REVIEW check this out
         y_pred = sample_predict(self, X)

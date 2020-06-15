@@ -41,6 +41,7 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'torch',
+        'pytorch_math',
         'psutil',
         'tqdm',
         'skorch',
@@ -49,6 +50,7 @@ setuptools.setup(
     extras_require={
         'dev': [
             'pylint',
+            'pep8',
             'autopep8',
             'bumpversion',
             'twine',

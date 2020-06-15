@@ -4,12 +4,14 @@
 
 import warnings
 
+import torch
 import numpy as np
 from sklearn.exceptions import NotFittedError
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.utils import _safe_indexing, check_array
-from sklearn.utils.validation import (_deprecate_positional_args,
-                                      check_is_fitted)
+from ..preprocessing import FunctionTransformer
+from sklearn.utils import _safe_indexing
+from ..utils import check_array
+from ..utils.validation import (_deprecate_positional_args,
+                                check_is_fitted)
 
 # REVIEW Check this out
 from ..base import BaseEstimator, RegressorMixin, clone
@@ -119,7 +121,7 @@ class TransformedTargetRegressor(RegressorMixin, BaseEstimator):
         self.inverse_func = inverse_func
         self.check_inverse = check_inverse
 
-    def _fit_transformer(self, y):
+    def _fit_transformer(self, y: torch.Tensor):
         """Check transformer and fit transformer.
 
         Create the default transformer, fit it and make additional inverse
@@ -148,14 +150,15 @@ class TransformedTargetRegressor(RegressorMixin, BaseEstimator):
             idx_selected = slice(None, None, max(1, y.shape[0] // 10))
             y_sel = _safe_indexing(y, idx_selected)
             y_sel_t = self.transformer_.transform(y_sel)
-            if not np.allclose(y_sel,
-                               self.transformer_.inverse_transform(y_sel_t)):
+            # REVIEW Check this out
+            inverse_transformed = self.transformer_.inverse_transform(y_sel_t)
+            if not torch.allclose(y_sel, inverse_transformed):
                 warnings.warn("The provided functions or transformer are"
                               " not strictly inverse of each other. If"
                               " you are sure you want to proceed regardless"
                               ", set 'check_inverse=False'", UserWarning)
 
-    def fit(self, X, y, **fit_params):
+    def fit(self, X: torch.Tensor, y: torch.Tensor, **fit_params):
         """Fit the model according to the given training data.
 
         Parameters
@@ -209,7 +212,7 @@ class TransformedTargetRegressor(RegressorMixin, BaseEstimator):
 
         return self
 
-    def predict(self, X):
+    def predict(self, X: torch.Tensor):
         """Predict using the base regressor, applying inverse.
 
         The regressor is used to predict and the ``inverse_func`` or

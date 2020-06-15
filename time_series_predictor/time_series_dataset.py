@@ -4,6 +4,7 @@ time_series_dataset
 
 import abc
 from torch.utils.data import Dataset
+import torch
 
 class TimeSeriesDataset(Dataset):
     """
@@ -17,8 +18,8 @@ class TimeSeriesDataset(Dataset):
     def __init__(self, _x, _y, labels):
         super().__init__()
         self.labels = labels
-        self.x = _x
-        self.y = _y
+        self.x = torch.Tensor(_x)
+        self.y = torch.Tensor(_y)
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])
@@ -39,6 +40,15 @@ class TimeSeriesDataset(Dataset):
         :returns: output predictor shape
         """
         return self.y.shape
+
+    def to(self, device):
+        """Make sure correct device is set
+
+        Args:
+            device ([type]): [description]
+        """    
+        self.x = self.x.to(device)
+        self.y = self.y.to(device)
 
     @abc.abstractmethod
     def make_future_dataframe(self, *args, **kwargs):

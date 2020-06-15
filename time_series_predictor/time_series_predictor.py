@@ -7,12 +7,12 @@ import warnings
 
 import psutil
 import torch
-from sklearn.pipeline import Pipeline
-from skorch import NeuralNetRegressor
+from .tensor_nnr import TensorNeuralNetRegressor
 from skorch.callbacks import Callback
 
+from .custom_sklearn import TransformedTargetRegressor, sample_predict
+from .custom_sklearn.pipeline import Pipeline
 from .min_max_scaler import MinMaxScaler as Scaler
-from .sklearn import TransformedTargetRegressor, sample_predict
 from .time_series_dataset import TimeSeriesDataset
 
 # Show switch to cpu warning
@@ -54,7 +54,7 @@ class TimeSeriesPredictor:
                 [
                     ('input scaler', Scaler()),
                     (
-                        'regressor', NeuralNetRegressor(
+                        'regressor', TensorNeuralNetRegressor(
                             net,
                             callbacks=[InputShapeSetter()],
                             **neural_net_regressor_params
@@ -128,7 +128,9 @@ class TimeSeriesPredictor:
           Additional parameters passed to the forward method of the module and to the
           self.train_split call.
         """
-        print(f"Using device {self.neural_net_regressor_params.get('device')}")
+        device = self.neural_net_regressor_params.get('device')
+        dataset.to(device)
+        print(f"Using device {device}")
         self.dataset = dataset
         try:
             self.ttr.fit(dataset.x, dataset.y, **fit_params)
@@ -138,7 +140,7 @@ class TimeSeriesPredictor:
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.neural_net_regressor_params.setdefault('device', 'cpu')
-                self.ttr.regressor['regressor'] = NeuralNetRegressor(
+                self.ttr.regressor['regressor'] = TensorNeuralNetRegressor(
                     self.ttr.regressor['regressor'].module,
                     callbacks=[InputShapeSetter()],
                     **self.neural_net_regressor_params
