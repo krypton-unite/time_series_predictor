@@ -17,7 +17,6 @@ import numbers
 import warnings
 from abc import ABCMeta, abstractmethod
 
-import torch
 import numpy as np
 import scipy.sparse as sp
 from joblib import Parallel, delayed

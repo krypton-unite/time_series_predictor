@@ -5,16 +5,14 @@
 import warnings
 
 import torch
-import numpy as np
 from sklearn.exceptions import NotFittedError
-from ..preprocessing import FunctionTransformer
 from sklearn.utils import _safe_indexing
-from ..utils import check_array
-from ..utils.validation import (_deprecate_positional_args,
-                                check_is_fitted)
 
 # REVIEW Check this out
 from ..base import BaseEstimator, RegressorMixin, clone
+from ..preprocessing import FunctionTransformer
+from ..utils import check_array
+from ..utils.validation import _deprecate_positional_args, check_is_fitted
 
 __all__ = ['TransformedTargetRegressor']
 

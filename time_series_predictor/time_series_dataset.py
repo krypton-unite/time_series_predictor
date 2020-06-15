@@ -18,8 +18,8 @@ class TimeSeriesDataset(Dataset):
     def __init__(self, _x, _y, labels):
         super().__init__()
         self.labels = labels
-        self.x = torch.Tensor(_x)
-        self.y = torch.Tensor(_y)
+        self.x = torch.tensor(_x, dtype=torch.float64)
+        self.y = torch.tensor(_y, dtype=torch.float64)
 
     def __getitem__(self, idx):
         return (self.x[idx], self.y[idx])

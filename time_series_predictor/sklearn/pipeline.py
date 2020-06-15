@@ -333,7 +333,8 @@ class Pipeline(_BaseComposition):
                                  self._log_message(len(self.steps) - 1)):
             if self._final_estimator != 'passthrough':
                 fit_params_last_step = fit_params_steps[self.steps[-1][0]]
-                self._final_estimator.fit(Xt, y, **fit_params_last_step)
+                # REVIEW Check this out
+                self._final_estimator.fit(Xt.float(), y.float(), **fit_params_last_step)
 
         return self
 

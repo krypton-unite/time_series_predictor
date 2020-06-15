@@ -609,7 +609,7 @@ def check_array(array, accept_sparse=False, *, accept_large_sparse=True,
             try:
                 warnings.simplefilter('error', ComplexWarning)
                 # REVIEW check this out.
-                if dtype != torch.float32:
+                if dtype != torch.float64:
                     if dtype is not None and np.dtype(dtype).kind in 'iu':
                         # Conversion float -> int should not contain NaN or
                         # inf (numpy#14412). We cannot use casting='safe' because
@@ -660,7 +660,7 @@ def check_array(array, accept_sparse=False, *, accept_large_sparse=True,
         #         FutureWarning, stacklevel=2)
 
         # make sure we actually converted to numeric:
-        if dtype != torch.float32:
+        if dtype != torch.float64:
             if dtype_numeric and array.dtype.kind == "O":
                 array = array.astype(np.float64)
             if not allow_nd and array.ndim >= 3:

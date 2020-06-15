@@ -54,6 +54,6 @@ class BenchmarkLSTM(nn.Module):
         output: Tensor
             Output tensor with shape (m, K, output_dim)
         """
-        lstm_out, _ = self.lstm(x)
+        lstm_out, _ = self.lstm(x.float())
         output = self.linear(lstm_out)
         return output
