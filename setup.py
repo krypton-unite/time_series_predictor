@@ -57,7 +57,7 @@ setuptools.setup(
             'lxml'
         ],
         'test': [
-            'pytest',
+            'pytest>=4.6',
             'pytest-cov',
             'pandas',
             'seaborn',
