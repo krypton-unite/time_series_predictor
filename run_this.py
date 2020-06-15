@@ -25,7 +25,7 @@ from time_series_predictor import TimeSeriesPredictor
 
 #     tsp.fit(dataset)
 #     mean_r2_score = tsp.score(dataset)
-#     assert mean_r2_score > -300
+#     assert mean_r2_score > -50
 
 if __name__ == "__main__":
     tsp = TimeSeriesPredictor(
