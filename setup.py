@@ -62,7 +62,7 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'sklearn',
-            'dotenv'
+            'python-dotenv'
         ],
         'docs': [
             'sphinx',
