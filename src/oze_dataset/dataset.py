@@ -1,4 +1,3 @@
-# coding: UTF-8
 """This module defines an example Torch dataset from the Oze datachallenge.
 
 Example

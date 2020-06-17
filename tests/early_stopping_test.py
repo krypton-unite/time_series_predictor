@@ -10,15 +10,22 @@ from src.model import BenchmarkLSTM
 from src.oze_dataset import OzeNPZDataset, npz_check
 from time_series_predictor import TimeSeriesPredictor
 
-def _get_dataset():
+def _get_credentials(user_name, user_password):
+    credentials = {}
+    credentials['user_name'] = user_name
+    credentials['user_password'] = user_password
+    return credentials
+
+def _get_dataset(user_name, user_password):
     return OzeNPZDataset(
         dataset_path=npz_check(
             Path('datasets'),
-            'dataset'
+            'dataset',
+            credentials=_get_credentials(user_name, user_password)
         )
     )
 
-def test_regular():
+def test_regular(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
@@ -30,7 +37,7 @@ def test_regular():
         optimizer=torch.optim.Adam
     )
 
-    tsp.fit(_get_dataset())
+    tsp.fit(_get_dataset(user_name, user_password))
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > -200
 
@@ -68,7 +75,7 @@ def test_train_loss_monitor_no_train_split():
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > 0.2
 
-def test_train_loss_monitor():
+def test_train_loss_monitor(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
@@ -79,6 +86,6 @@ def test_train_loss_monitor():
         # train_split=None, # default = skorch.dataset.CVSplit(5)
         optimizer=torch.optim.Adam
     )
-    tsp.fit(_get_dataset())
+    tsp.fit(_get_dataset(user_name, user_password))
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > 0.2
