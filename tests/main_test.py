@@ -3,13 +3,12 @@ main test script
 To run, issue the command pytest at the root folder of the project.
 """
 import numpy as np
-
 import torch
-from sklearn.metrics import r2_score # mean_squared_error
-from time_series_predictor import TimeSeriesPredictor
-from src.model import BenchmarkLSTM
-from src.flights_dataset import FlightsDataset
+from sklearn.metrics import r2_score  # mean_squared_error
 
+from src.flights_dataset import FlightsDataset
+from src.model import BenchmarkLSTM
+from time_series_predictor import TimeSeriesPredictor
 
 def test_lstm_tsp_fitting():
     """
