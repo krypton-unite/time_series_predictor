@@ -62,7 +62,8 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'sklearn',
-            'python-dotenv'
+            'python-dotenv',
+            'lxml'
         ],
         'docs': [
             'sphinx',
