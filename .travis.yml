@@ -1,4 +1,8 @@
 language: python
+cache:
+  pip
+  directories:
+  - datasets
 before_install:
   - python --version
   - pip install -U pip
