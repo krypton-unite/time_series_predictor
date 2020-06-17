@@ -61,7 +61,8 @@ setuptools.setup(
             'pytest-cov',
             'pandas',
             'seaborn',
-            'sklearn'
+            'sklearn',
+            'dotenv'
         ],
         'docs': [
             'sphinx',
