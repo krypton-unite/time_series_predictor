@@ -9,7 +9,7 @@ import psutil
 import torch
 from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
-from skorch.callbacks import Callback
+from skorch.callbacks import Callback, EarlyStopping
 
 from .min_max_scaler import MinMaxScaler as Scaler
 from .sklearn import TransformedTargetRegressor, sample_predict
@@ -18,19 +18,28 @@ from .time_series_dataset import TimeSeriesDataset
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
 
-class InputShapeSetter(Callback):
-    """InputShapeSetter
-    dynamically set the input size of the PyTorch module based on the data
+def _get_nnr(net, early_stopping: EarlyStopping = None, **neural_net_regressor_params):
+    class InputShapeSetter(Callback):
+        """InputShapeSetter
+        dynamically set the input size of the PyTorch module based on the data
 
-    Typically, it’s up to the user to determine the shape of the input data when defining
-    the PyTorch module. This can sometimes be inconvenient, e.g. when the shape is only
-    known at runtime. E.g., when using :class:`sklearn.feature_selection.VarianceThreshold`,
-    you cannot know the number of features in advance. The best solution would be to set
-    the input size dynamically.
-    """
-    def on_train_begin(self, net, X=None, y=None, **kwargs):
-        net.set_params(module__input_dim=X.shape[-1],
-                       module__output_dim=y.shape[-1])
+        Typically, it’s up to the user to determine the shape of the input data when defining
+        the PyTorch module. This can sometimes be inconvenient, e.g. when the shape is only
+        known at runtime. E.g., when using :class:`sklearn.feature_selection.VarianceThreshold`,
+        you cannot know the number of features in advance. The best solution would be to set
+        the input size dynamically.
+        """
+        def on_train_begin(self, net, X=None, y=None, **kwargs):
+            net.set_params(module__input_dim=X.shape[-1],
+                        module__output_dim=y.shape[-1])
+    callbacks = [InputShapeSetter()]
+    if early_stopping is not None:
+        callbacks.append(early_stopping)
+    return NeuralNetRegressor(
+        net,
+        callbacks=callbacks,
+        **neural_net_regressor_params
+    )
 
 class TimeSeriesPredictor:
     """Network agnostic time series predictor class
@@ -38,11 +47,18 @@ class TimeSeriesPredictor:
     Parameters
     ----------
     **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
+    early_stopping: torch.callbacks.EarlyStopping object
     """
 
-    def __init__(self, net, **neural_net_regressor_params):
+    def __init__(self, net, early_stopping: EarlyStopping = None, **neural_net_regressor_params):
         self.dataset = None
+        self.early_stopping = early_stopping
         self.cpu_count = psutil.cpu_count(logical=True)
+        if 'train_split' in neural_net_regressor_params:
+            train_split = neural_net_regressor_params.get('train_split')
+            if train_split is None and early_stopping is not None:
+                if early_stopping.monitor is 'valid_loss':
+                    raise ValueError('Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.')
         if 'device' in neural_net_regressor_params:
             device = neural_net_regressor_params.get('device')
         else:
@@ -53,13 +69,7 @@ class TimeSeriesPredictor:
             regressor=Pipeline(
                 [
                     ('input scaler', Scaler()),
-                    (
-                        'regressor', NeuralNetRegressor(
-                            net,
-                            callbacks=[InputShapeSetter()],
-                            **neural_net_regressor_params
-                        )
-                    )
+                    ('regressor', _get_nnr(net, early_stopping, **neural_net_regressor_params))
                 ]
             ),
             transformer=Scaler()
@@ -138,9 +148,9 @@ class TimeSeriesPredictor:
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.neural_net_regressor_params.setdefault('device', 'cpu')
-                self.ttr.regressor['regressor'] = NeuralNetRegressor(
+                self.ttr.regressor['regressor'] = _get_nnr(
                     self.ttr.regressor['regressor'].module,
-                    callbacks=[InputShapeSetter()],
+                    self.early_stopping,
                     **self.neural_net_regressor_params
                 )
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
