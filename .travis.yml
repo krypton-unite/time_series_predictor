@@ -1,15 +1,8 @@
-language: python
-cache:
-  pip: true
-  directories:
-  - datasets
-before_install:
-  - python --version
-  - pip install -U pip
-  - pip install codecov
-install:
-    - pip install -e .[test] # install package + test dependencies
-script:
-    - pytest --user_name $CHALLENGE_USER_NAME --user_password $CHALLENGE_USER_PASSWORD --cov=time_series_predictor # run tests
-after_success:
-  - codecov # submit coverage
+dist: bionic
+addons:
+  apt:
+    sources:
+      - ppa:chris-lea/redis-server
+    packages:
+      - redis-tools
+      - redis-server
