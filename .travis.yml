@@ -12,4 +12,4 @@ install:
 script:
     - pytest --user_name $CHALLENGE_USER_NAME --user_password $CHALLENGE_USER_PASSWORD --cov=time_series_predictor # run tests
 after_success:
-  - codecov # submit coverage
+  - codecov # submit coverage 

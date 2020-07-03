@@ -5,6 +5,7 @@ import json
 import os
 import re
 import threading
+import cgi
 from os import makedirs, path, remove
 
 from pathlib import Path
@@ -31,9 +32,14 @@ def download_from_url(session_requests, url, destination_folder):
     assert response.ok
 
     download_details = {}
-    download_details['name'] = re.findall(
-        "filename=(.+)", response.headers['content-disposition'])[0]
-    download_details['size'] = int(response.headers["Content-Length"])
+    if 'Content-Disposition' in response.headers:
+        value, params = cgi.parse_header(response.headers['Content-Disposition'])
+        if not (value == 'attachment' and 'filename' in params):
+            raise ValueError('Cannot retrieve filename')
+        download_details['name'] = params['filename']
+        download_details['size'] = int(response.headers["Content-Length"])
+    else:
+        raise ValueError('Cannot retrieve Content-Disposition')
 
     dst = destination_folder.joinpath(download_details['name'])
     if dst.is_file():
@@ -78,12 +84,7 @@ class DownloadThread(threading.Thread):
         """
         download_from_url(self.session_requests, self.url, self.path)
 
-# pylint: disable=too-many-locals
-def npz_check(datasets_path, output_filename, credentials=None):
-    """
-    make sure npz is present
-    """
-    dataset_path = datasets_path.joinpath(output_filename+".npz")
+def _get_files_to_download(datasets_path, dataset_path):
     x_train = {
         'url': 'https://challengedata.ens.fr/participants/challenges/28/download/x-train',
         'filename': 'x_train_LsAZgHU.csv'
@@ -119,37 +120,57 @@ def npz_check(datasets_path, output_filename, credentials=None):
                 # If there is datasets folder but there isn't output npz file and there isn't
                 # y_train file
                 files_to_download.append(y_train)
-    if files_to_download:
-        login_url = "https://challengedata.ens.fr/login/"
-        session_requests = requests.session()
-        response = session_requests.get(login_url)
-        assert response.ok
+    make_npz_info = {}
+    make_npz_info['flag'] = make_npz_flag
+    make_npz_info['args'] = (x_train['filename'], y_train['filename'])
+    return files_to_download, make_npz_info
 
-        authenticity_token = list(set(html.fromstring(response.text).xpath(
-            "//input[@name='csrfmiddlewaretoken']/@value")))[0]
-        if credentials is None:
-            load_dotenv(Path(__file__).parent.joinpath('.env.test.local'))
-            challenge_user_name = os.getenv("CHALLENGE_USER_NAME")
-            challenge_user_password = os.getenv("CHALLENGE_USER_PASSWORD")
-            if None in [challenge_user_name, challenge_user_password]:
-                # pylint: disable=line-too-long
-                link = 'https://github.com/maxjcohen/ozechallenge_benchmark/blob/master/README.md#download-using-credentials-optional'
-                raise ValueError(
-                    f'Missing login credentials. Make sure you follow {link}')
-        else:
-            challenge_user_name = credentials['user_name']
-            challenge_user_password = credentials['user_password']
+def _get_local_credentials():
+    load_dotenv(Path(__file__).parent.joinpath('.env.test.local'))
+    challenge_user_name = os.getenv("CHALLENGE_USER_NAME")
+    challenge_user_password = os.getenv("CHALLENGE_USER_PASSWORD")
+    return (challenge_user_name, challenge_user_password)
 
-        response = session_requests.post(
-            login_url,
-            data={
-                "username": challenge_user_name,
-                "password": challenge_user_password,
-                "csrfmiddlewaretoken": authenticity_token
-            },
-            headers=dict(referer=login_url)
-        )
-        assert response.ok
+# pylint: disable=too-many-locals
+def npz_check(datasets_path, output_filename, credentials=None):
+    """
+    make sure npz is present
+    """
+    def download_files(files_to_download):
+        def login_to_challengedata_website(credentials):
+            def get_credentials(credentials):
+                if credentials is None:
+                    challenge_user_name, challenge_user_password = _get_local_credentials()
+                    if None in [challenge_user_name, challenge_user_password]:
+                        # pylint: disable=line-too-long
+                        link = 'https://github.com/maxjcohen/ozechallenge_benchmark/blob/master/README.md#download-using-credentials-optional'
+                        raise ValueError(
+                            f'Missing login credentials. Make sure you follow {link}')
+                else:
+                    challenge_user_name = credentials['user_name']
+                    challenge_user_password = credentials['user_password']
+                return challenge_user_name, challenge_user_password
+            login_url = "https://challengedata.ens.fr/login/"
+            session_requests = requests.session()
+            response = session_requests.get(login_url)
+            assert response.ok
+
+            authenticity_token = list(set(html.fromstring(response.text).xpath(
+                "//input[@name='csrfmiddlewaretoken']/@value")))[0]
+            challenge_user_name, challenge_user_password = get_credentials(credentials)
+
+            response = session_requests.post(
+                login_url,
+                data={
+                    "username": challenge_user_name,
+                    "password": challenge_user_password,
+                    "csrfmiddlewaretoken": authenticity_token
+                },
+                headers=dict(referer=login_url)
+            )
+            assert response.ok
+            return session_requests
+        session_requests = login_to_challengedata_website(credentials)
 
         threads = []
         for file in files_to_download:
@@ -164,11 +185,15 @@ def npz_check(datasets_path, output_filename, credentials=None):
         for thread in threads:
             thread.join()
 
-    if make_npz_flag:
-        make_npz(datasets_path, output_filename,
-                 x_train['filename'], y_train['filename'])
-    return dataset_path
+    dataset_path = datasets_path.joinpath(output_filename+".npz")
+    files_to_download, make_npz_info = _get_files_to_download(datasets_path, dataset_path)
 
+    if files_to_download:
+        download_files(files_to_download)
+
+    if make_npz_info['flag']:
+        make_npz(datasets_path, output_filename, *make_npz_info['args'])
+    return dataset_path
 
 def make_npz(datasets_path, output_filename, x_train_filename, y_train_filename):
     """
