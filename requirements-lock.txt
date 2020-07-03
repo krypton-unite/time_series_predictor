@@ -107,17 +107,7 @@ threadpoolctl==2.1.0 \
     --hash=sha256:38b74ca20ff3bb42caca8b00055111d74159ee95c4370882bbff2b93d24da725 \
     --hash=sha256:ddc57c96a38beb63db45d6c159b5ab07b6bced12c45a1f07b2b92f272aebfa6b \
     # via scikit-learn
-torch==1.5.0+cu92 \
-    --hash=sha256:21c6cd3f053b21b0c219963a0403eaeb289d53cb4a8ecf9a099c2e9232293fa4 \
-    --hash=sha256:2281b4d9fbec7925f44e96a6e5c753a58161d3812bc99fb5d7b0a555d1d60d7f \
-    --hash=sha256:352d2ac173d6b203f10fe719545c36810182badace9c6f9bc9b34dc7d138d90e \
-    --hash=sha256:560ce89a62b01f7c6c07f1e4099af3e74f4a7213adcc86abd04a2ae2f8bf7663 \
-    --hash=sha256:77586f5deca99bf854dce2bce9e533a90dd97694d190b15bd17c170ef493e2b1 \
-    --hash=sha256:8078aeffc481549f63e5fcb0ff295164faedd368a4f01e4a489fafb51d794734 \
-    --hash=sha256:8e9df2aa4ec2516476dc8c09c984a6d0e11d52126833e47a6d9f18c177e83de1 \
-    --hash=sha256:a903fe0e2c9f2017b664938ed27ec81e45f0405b37c1faabdfd12b167f552510 \
-    --hash=sha256:af9d74ed62b716ab3803dfa8774380abb8aa97b84c656ca814487d7d9611ccdd \
-    --hash=sha256:eca7d1ab146e75fb672e53382a71c0073caceaf3920a3a7aaf6d07419f8b38f7 \
+torch==1.5.0
     # via time_series_predictor (setup.py)
 tqdm==4.46.0 \
     --hash=sha256:4733c4a10d0f2a4d098d801464bdaf5240c7dadd2a7fde4ee93b0a0efd9fb25e \

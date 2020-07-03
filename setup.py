@@ -40,7 +40,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'torch==1.5.0+cu92',
+        'torch==1.5.0',
         'psutil==5.7.0',
         'tqdm==4.46.0',
         'skorch==0.8.0',
@@ -48,6 +48,7 @@ setuptools.setup(
     ],
     extras_require={
         'dev': [
+            'wheel',
             'pylint',
             'autopep8',
             'bumpversion',
