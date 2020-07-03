@@ -40,11 +40,11 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'torch',
-        'psutil',
-        'tqdm',
-        'skorch',
-        'scipy'
+        'torch==1.5.0+cu92',
+        'psutil==5.7.0',
+        'tqdm==4.46.0',
+        'skorch==0.8.0',
+        'scipy==1.4.1'
     ],
     extras_require={
         'dev': [
@@ -74,8 +74,12 @@ setuptools.setup(
             'sphinx_rtd_theme',
             'pandas',
             'seaborn',
+            'sklearn',
+            'skorch',
             'jupyterlab',
-            'matplotlib'
+            'matplotlib',
+            'python-dotenv',
+            'lxml'
         ]
     }
 )
