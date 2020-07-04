@@ -3,7 +3,40 @@ Setup
 """
 import os
 import setuptools
+import distutils.cmd
+import distutils.log
+import subprocess
 
+class UpgradeCommand(distutils.cmd.Command):
+  """A custom command to run pip-compile generating hashes and outputting to requirements-lock.txt."""
+
+  description = 'update requirements-lock.txt with upgraded packages'
+  user_options = [
+      # The format is (long option, short option, description).
+      ('output-file=', None, 'path to output requirements file'),
+  ]
+
+  def initialize_options(self):
+    """Set default values for options."""
+    # Each user option must be listed here with their default value.
+    self.output_file = 'requirements-lock.txt'
+
+  def finalize_options(self):
+    """Post-process options."""
+    if self.output_file:
+      assert os.path.exists(self.output_file), (
+          'Output file %s does not exist.' % self.output_file)
+
+  def run(self):
+    """Run command."""
+    command = ['pip-compile']
+    if self.output_file:
+      command.append('--find-links=https://download.pytorch.org/whl/torch_stable.html --generate-hashes --upgrade --output-file=%s' % self.output_file)
+    command.append(os.getcwd())
+    self.announce(
+        'Running command: %s' % str(command),
+        level=distutils.log.INFO)
+    subprocess.check_call(command)
 
 def package_files(directory):
     """package_files
@@ -23,6 +56,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
+    cmdclass={
+        'upgrade': UpgradeCommand,
+    },
     name="time_series_predictor",
     version="1.3.0",
     author="Daniel Kaminski de Souza",
@@ -40,11 +76,10 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'torch==1.5.0',
-        'psutil==5.7.0',
-        'tqdm==4.46.0',
-        'skorch==0.8.0',
-        'scipy==1.4.1'
+        'torch===1.5.0',
+        'skorch',
+        'scipy==1.4.1', # via skorch
+        'psutil'
     ],
     extras_require={
         'dev': [
@@ -64,7 +99,8 @@ setuptools.setup(
             'seaborn',
             'sklearn',
             'python-dotenv',
-            'lxml'
+            'lxml',
+            'requests'
         ],
         'docs': [
             'sphinx',
@@ -76,7 +112,6 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'sklearn',
-            'skorch',
             'jupyterlab',
             'matplotlib',
             'python-dotenv',
