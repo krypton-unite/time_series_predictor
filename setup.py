@@ -68,7 +68,7 @@ setuptools.setup(
         'upgrade': UpgradeCommand,
     },
     name="time_series_predictor",
-    version="1.3.0",
+    version="1.3.1",
     author="Daniel Kaminski de Souza",
     author_email="daniel@kryptonunite.com",
     description="Time Series Predictor",
