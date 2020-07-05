@@ -16,7 +16,7 @@ Please refer to the following examples:
 #### Windows
 
 ```powershell
-virtualenv -p python3 .env
+python -m venv .\.env
 .\.env\Scripts\activate
 pip install -e .[dev]
 ```
@@ -24,7 +24,7 @@ pip install -e .[dev]
 #### Linux or MacOS
 
 ```bash
-virtualenv -p python3 .env
+python -m venv .env
 . .env/bin/activate
 pip install -e .[dev]
 ```
