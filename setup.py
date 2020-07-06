@@ -86,7 +86,7 @@ setuptools.setup(
     install_requires=[
         'torch',
         'skorch',
-        'scipy==1.4.1',  # via skorch
+        'scipy',  # via skorch
         'psutil'
     ],
     extras_require={
