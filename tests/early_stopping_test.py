@@ -32,7 +32,7 @@ def test_regular(user_name, user_password):
     Tests the LSTMTimeSeriesPredictor fitting
     """
     tsp = TimeSeriesPredictor(
-        BenchmarkLSTM(),
+        BenchmarkLSTM(hidden_dim=16),
         early_stopping=EarlyStopping(patience=30),
         max_epochs=500,
         # train_split=None, # default = skorch.dataset.CVSplit(5)
@@ -49,7 +49,7 @@ def test_no_train_split():
     """
     with pytest.raises(ValueError) as error:
         TimeSeriesPredictor(
-            BenchmarkLSTM(),
+            BenchmarkLSTM(hidden_dim=16),
             early_stopping=EarlyStopping(),
             max_epochs=500,
             train_split=None,
