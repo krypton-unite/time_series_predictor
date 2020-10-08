@@ -14,7 +14,7 @@ __pycache__/
 *.pth
 
 # Doc
-docs/build
+app/docs/build
 
 # Vscode
 /.vscode
@@ -27,4 +27,4 @@ docs/build
 .env.test.local
 
 # datasets
-/datasets
+app/datasets
