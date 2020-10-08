@@ -30,7 +30,7 @@ class SyncCommand(distutils.cmd.Command):
         command = ['pip-sync']
         if not os.path.exists(self.input_file):
             # pylint: disable=line-too-long
-            raise('Input file %s does not exist.' % self.input_file)
+            raise 'Input file %s does not exist.' % self.input_file
         # command.append(os.getcwd())
         command = command+[self.input_file]
         print(' '.join(command))
@@ -112,7 +112,7 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6 < 3.8',
+    python_requires='>=3.6<3.8',
     install_requires=[
         'torch',
         'skorch',
