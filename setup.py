@@ -35,14 +35,13 @@ class UpgradeCommand(distutils.cmd.Command):
         command = ['pip-compile']
         if self.output_file:
             # pylint: disable=line-too-long
-            command.append(
-                '--find-links=https://download.pytorch.org/whl/torch_stable.html --generate-hashes --upgrade --output-file=%s' % self.output_file)
-        command.append(os.getcwd())
-        print(command)
+            command = command + ['--find-links=https://download.pytorch.org/whl/torch_stable.html', '--upgrade', '--output-file=%s' % self.output_file]
+        # command.append(os.getcwd())
+        print(' '.join(command))
         self.announce(
             'Running command: %s' % str(command),
             level=distutils.log.INFO)
-        subprocess.check_call(command)
+        subprocess.check_call(' '.join(command))
 
 
 def package_files(directory):
