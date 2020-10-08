@@ -44,7 +44,7 @@ pytest -s
 
 ```bash
 pip install -e .[docs]
-cd docs
+# cd docs
 # make html
 sphinx-build ./docs/source ./docs/build
 ```
