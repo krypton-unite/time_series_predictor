@@ -8,6 +8,36 @@ import subprocess
 
 import setuptools
 
+class SyncCommand(distutils.cmd.Command):
+    """A custom command to run pip-sync with requirements-lock.txt."""
+
+    description = 'synchronize with requirements-lock.txt'
+    user_options = [
+        # The format is (long option, short option, description).
+        ('output-file=', None, 'path to output requirements file'),
+    ]
+
+    def initialize_options(self):
+        """Set default values for options."""
+        # Each user option must be listed here with their default value.
+        self.input_file = 'requirements-lock.txt'
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Run command."""
+        command = ['pip-sync']
+        if not os.path.exists(self.input_file):
+            # pylint: disable=line-too-long
+            raise('Input file %s does not exist.' % self.input_file)
+        # command.append(os.getcwd())
+        command = command+[self.input_file]
+        print(' '.join(command))
+        self.announce(
+            'Running command: %s' % str(command),
+            level=distutils.log.INFO)
+        subprocess.check_call(command)
 
 class UpgradeCommand(distutils.cmd.Command):
     """A custom command to run pip-compile generating hashes and outputting to
@@ -35,7 +65,7 @@ class UpgradeCommand(distutils.cmd.Command):
         command = ['pip-compile']
         if self.output_file:
             # pylint: disable=line-too-long
-            command = command + ['--find-links=https://download.pytorch.org/whl/torch_stable.html', '--upgrade', '--output-file=%s' % self.output_file]
+            command = command + ['--find-links=https://download.pytorch.org/whl/torch_stable.html', '--upgrade', '--generate-hashes', '--output-file=%s' % self.output_file]
         # command.append(os.getcwd())
         print(' '.join(command))
         self.announce(
@@ -65,6 +95,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     cmdclass={
         'upgrade': UpgradeCommand,
+        'synchronize': SyncCommand,
     },
     name="time_series_predictor",
     version="1.3.3",
