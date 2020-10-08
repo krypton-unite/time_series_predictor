@@ -9,16 +9,15 @@ Please refer to the following examples:
 - [example_flights_dataset.ipynb](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/docs/source/notebooks/example_flights_dataset.ipynb)
 - [example_oze_challenge.ipynb](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/docs/source/notebooks/example_oze_challenge.ipynb)
 
-## Development
+## Pre requisistes installation
 
-### Pre requisistes installation
-
-#### Windows
+### Windows
 
 ```powershell
 python -m venv .\.env
 .\.env\Scripts\activate
-pip install -e .[dev]
+pip install pip-tools
+python setup.py synchronize
 ```
 
 #### Linux or MacOS
@@ -26,25 +25,47 @@ pip install -e .[dev]
 ```bash
 python -m venv .env
 . .env/bin/activate
+pip install pip-tools
+python setup.py synchronize
+```
+
+--------
+
+## Development
+
+```terminal
 pip install -e .[dev]
 ```
 
-------
+--------
 
-### Test
+## Test
 
-```bash
+```terminal
 pip install -e .[test]
 pytest -s
 ```
 
-------
+--------
 
-### Build docs
+## Build docs
+
+```terminal
+pip install -e .[docs]
+```
+
+### Windows
+
+```powershell
+# cd docs
+# ./make html
+sphinx-build ./docs/source ./docs/build
+```
+
+#### Linux or MacOS
 
 ```bash
-pip install -e .[docs]
 # cd docs
 # make html
-sphinx-build ./docs/source ./docs/build
+sphinx-build docs/source docs/build
 ```

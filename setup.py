@@ -105,7 +105,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=['time_series_predictor'],
+    packages=['app/time_series_predictor'],
     package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",

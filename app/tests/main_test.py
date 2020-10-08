@@ -7,9 +7,9 @@ import torch
 import pytest
 from sklearn.metrics import r2_score  # mean_squared_error
 
-from src.flights_dataset import FlightsDataset
-from src.model import BenchmarkLSTM
-from time_series_predictor import TimeSeriesPredictor
+from app.src.flights_dataset import FlightsDataset
+from app.src.model import BenchmarkLSTM
+from app.time_series_predictor import TimeSeriesPredictor
 
 def test_lstm_tsp_fitting():
     """

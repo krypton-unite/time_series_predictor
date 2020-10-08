@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = time_series_predictor
+source = app/time_series_predictor
 
 [report]
 exclude_lines =
@@ -10,4 +10,4 @@ exclude_lines =
     if __name__ == .__main__.:
 ignore_errors = True
 omit =
-    tests/*
+    app/tests/*

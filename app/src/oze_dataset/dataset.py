@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset
-from time_series_predictor import TimeSeriesDataset
+from app.time_series_predictor import TimeSeriesDataset
 
 TIME_SERIES_LENGTH = 672
 

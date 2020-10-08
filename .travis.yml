@@ -2,7 +2,7 @@ language: python
 cache:
   pip: true
   directories:
-  - datasets
+  - app/datasets
 before_install:
   - python --version
   - pip install -U pip
