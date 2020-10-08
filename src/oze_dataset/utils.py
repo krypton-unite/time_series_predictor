@@ -4,6 +4,8 @@ Utils
 import json
 import os
 import re
+import requests
+import urllib.request
 import threading
 import cgi
 from os import makedirs, path, remove
@@ -18,6 +20,8 @@ from dotenv import load_dotenv
 from lxml import html
 
 from .dataset import TIME_SERIES_LENGTH
+
+import lxml.html
 
 def download_from_url(session_requests, url, destination_folder):
     """
@@ -169,6 +173,10 @@ def npz_check(datasets_path, output_filename, credentials=None):
                 headers=dict(referer=login_url)
             )
             assert response.ok
+            lxml_mysite = lxml.html.fromstring(response.text)
+            # <ul class="errorlist nonfield">
+            notification_error_login = lxml_mysite.xpath("//div[@id=\"notification_error_login\"]")
+            assert(not notification_error_login), "Couldn't login!"
             return session_requests
         session_requests = login_to_challengedata_website(credentials)
 

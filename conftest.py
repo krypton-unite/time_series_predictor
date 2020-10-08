@@ -1,5 +1,9 @@
 """conftest
 """
+from pathlib import Path
+import os
+from dotenv import load_dotenv
+
 
 def pytest_addoption(parser):
     """pytest_addoption
@@ -7,8 +11,13 @@ def pytest_addoption(parser):
     Args:
         parser ([type]): [description]
     """
-    parser.addoption("--user_name", action="store", default="your_user_name")
-    parser.addoption("--user_password", action="store", default="your_password")
+    load_dotenv(Path('src', 'oze_dataset').joinpath('.env.test.local'))
+    challenge_user_name = os.getenv("CHALLENGE_USER_NAME")
+    challenge_user_password = os.getenv("CHALLENGE_USER_PASSWORD")
+    parser.addoption("--user_name", action="store",
+                     default=challenge_user_name if challenge_user_name else "your_user_name")
+    parser.addoption("--user_password", action="store",
+                     default=challenge_user_password if challenge_user_password else "your_password")
 
 
 def pytest_generate_tests(metafunc):
