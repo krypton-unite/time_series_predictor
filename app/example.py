@@ -5,10 +5,10 @@ from pathlib import Path
 
 import torch
 from skorch.callbacks import EarlyStopping
-from src.flights_dataset import FlightsDataset
-from src.model import BenchmarkLSTM
-from src.oze_dataset import OzeNPZDataset, npz_check
-from time_series_predictor import TimeSeriesPredictor
+from app.src.flights_dataset import FlightsDataset
+from app.src.model import BenchmarkLSTM
+from app.src.oze_dataset import OzeNPZDataset, npz_check
+from app.time_series_predictor import TimeSeriesPredictor
 # from tune_sklearn.tune_gridsearch import TuneGridSearchCV
 
 if __name__ == "__main__":
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     )
     dataset = OzeNPZDataset(
         dataset_path=npz_check(
-            Path('datasets'),
+            Path('app', 'datasets'),
             'dataset'
         )
     )

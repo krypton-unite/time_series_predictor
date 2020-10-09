@@ -21,7 +21,7 @@ def _get_credentials(user_name, user_password):
 def _get_dataset(user_name, user_password):
     return OzeNPZDataset(
         dataset_path=npz_check(
-            Path('datasets'),
+            Path('app', 'datasets'),
             'dataset',
             credentials=_get_credentials(user_name, user_password)
         )
