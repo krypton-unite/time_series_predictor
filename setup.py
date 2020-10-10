@@ -105,7 +105,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=['time_series_predictor', 'src'],
+    packages=['time_series_predictor', 'src', 'src/oze_dataset'],
     package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",
