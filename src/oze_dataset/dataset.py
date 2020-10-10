@@ -9,8 +9,6 @@ $ dataloader = DataLoader(OzeDataset(DATSET_PATH),
 
 """
 
-import os
-import json
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +16,7 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 from time_series_predictor import TimeSeriesDataset
+from .labels import labels
 
 TIME_SERIES_LENGTH = 672
 
@@ -42,7 +41,7 @@ class OzeEvaluationDataset(Dataset):
             self,
             dataset_x_path,
             time_series_length=TIME_SERIES_LENGTH,
-            labels_path="labels.json",
+            given_labels=labels,
             **kwargs):
         """Load dataset from csv.
 
@@ -50,23 +49,22 @@ class OzeEvaluationDataset(Dataset):
         ---------
         dataset_x_path: str or Path
             Path to the dataset inputs as csv.
-        labels_path: str or Path, optional
+        labels: str or Path, optional
             Path to the labels, divided in R, Z and X, in json format.
-            Default is "labels.json".
+            Default is "labels.py.
         """
         super().__init__(**kwargs)
 
-        self._load_x_from_csv(dataset_x_path, time_series_length, labels_path)
+        self._load_x_from_csv(dataset_x_path, time_series_length, given_labels)
 
     # pylint: disable=invalid-name
-    def _load_x_from_csv(self, dataset_x_path, time_series_length, labels_path):
+    def _load_x_from_csv(self, dataset_x_path, time_series_length, given_labels):
         """Load input dataset from csv and create x_train tensor."""
         # Load dataset as csv
         x = pd.read_csv(dataset_x_path)
 
         # Load labels, file can be found in challenge description
-        with open(labels_path, "r") as stream_json:
-            self.labels = json.load(stream_json)
+        self.labels = given_labels
 
         m = x.shape[0]
         K = time_series_length
@@ -123,28 +121,24 @@ class OzeNPZDataset(TimeSeriesDataset):
     # pylint: disable=invalid-name
     def __init__(self,
                  dataset_path,
-                 labels_path=Path(__file__).parent.joinpath('labels.json')):
+                 given_labels=labels):
         """Load dataset from npz.
 
         Parameters
         ---------
         dataset_x: str or Path
             Path to the dataset inputs as npz.
-        labels_path: str or Path, optional
+        labels: str or Path, optional
             Path to the labels, divided in R, Z and X, in json format.
-            Default is "labels.json".
+            Default is "labels.py".
         """
-        def load_npz(dataset_path, labels_path):
+        def load_npz(dataset_path, given_labels):
             """Load dataset from csv and create x_train and y_train tensors."""
             def make_predictor(features):
                 #pylint: disable=too-many-function-args
                 return np.concatenate(features, axis=-1).astype(np.float32)
             # Load dataset as csv
             dataset = np.load(dataset_path)
-
-            # Load labels, can be found through csv or challenge description
-            with open(labels_path, "r") as stream_json:
-                labels = json.load(stream_json)
 
             R, X, Z = dataset['R'], dataset['X'], dataset['Z']
             K = Z.shape[-1]  # Time serie length
@@ -161,16 +155,15 @@ class OzeNPZDataset(TimeSeriesDataset):
             output_features = [X]
             y = make_predictor(output_features)
 
-            return (x, y, labels)
-        x, y, labels = load_npz(dataset_path, labels_path)
-        super().__init__(x, y, labels)
+            return (x, y, given_labels)
+        x, y, given_labels = load_npz(dataset_path, given_labels)
+        super().__init__(x, y, given_labels)
 
     # pylint: disable=arguments-differ
     def make_future_dataframe(self, *args, include_history=True, **kwargs):
-        parent_path = Path(__file__).parent
         dataset_eval = OzeEvaluationDataset(
             Path('docs', 'source', 'notebooks', 'datasets', 'x_test_QK7dVsy.csv'),
-            TIME_SERIES_LENGTH, labels_path=parent_path.joinpath('labels.json'))
+            TIME_SERIES_LENGTH, given_labels=labels)
         if include_history:
             return np.concatenate([self.x, dataset_eval.x])
         return dataset_eval.x

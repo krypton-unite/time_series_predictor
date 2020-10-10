@@ -2,7 +2,7 @@
 Utils
 """
 import cgi
-import json
+from .labels import labels
 import os
 import threading
 from os import makedirs, path, remove
@@ -219,15 +219,12 @@ def csv2npz(dataset_x_path,
             dataset_y_path,
             output_path,
             filename,
-            labels_path=Path('src', 'oze_dataset').joinpath('labels.json')):
+            labels=labels):
     """Load input dataset from csv and create x_train tensor."""
+
     # Load dataset as csv
     x = pd.read_csv(dataset_x_path)
     y = pd.read_csv(dataset_y_path)
-
-    # Load labels, file can be found in challenge description
-    with open(labels_path, "r") as stream_json:
-        labels = json.load(stream_json)
 
     m = x.shape[0]
     K = TIME_SERIES_LENGTH  # Can be found through csv

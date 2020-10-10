@@ -1,4 +1,4 @@
-{
+labels = {
     "X": [
         "Q_AC_OFFICE",
         "Q_HEAT_OFFICE",

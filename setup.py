@@ -106,7 +106,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
     packages=['time_series_predictor', 'src', 'src/oze_dataset'],
-    package_data={'': extra_files + ['src/oze_dataset/labels.json']},
+    package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
