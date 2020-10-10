@@ -1,6 +1,6 @@
 Benchmark LSTM module
 =====================
 
-.. automodule:: src.model
+.. automodule:: app.src.model
    :members:
    :show-inheritance:
