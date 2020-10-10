@@ -188,6 +188,8 @@ def npz_check(datasets_path, output_filename, credentials=None):
         for thread in threads:
             thread.join()
 
+        session_requests.close()
+
     dataset_path = datasets_path.joinpath(output_filename+".npz")
     files_to_download, make_npz_info = _get_files_to_download(datasets_path, dataset_path)
 

@@ -52,20 +52,7 @@ pytest -s
 
 ```terminal
 pip install -e .[docs]
-```
-
-### Windows
-
-```powershell
-# cd docs
-# ./make html
-sphinx-build ./docs/source ./docs/build
-```
-
-#### Linux or MacOS
-
-```bash
-# cd docs
+# cd app/docs
 # make html
-sphinx-build docs/source docs/build
+sphinx-build app/docs/source app/docs/build
 ```
