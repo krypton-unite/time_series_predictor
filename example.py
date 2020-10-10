@@ -21,7 +21,7 @@ if __name__ == "__main__":
     )
     dataset = OzeNPZDataset(
         dataset_path=npz_check(
-            Path('datasets'),
+            Path('docs', 'source', 'notebooks', 'datasets'),
             'dataset'
         )
     )

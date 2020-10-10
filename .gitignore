@@ -27,4 +27,4 @@ docs/build
 .env.test.local
 
 # datasets
-datasets/*
+docs/source/notebooks/datasets/*.*
