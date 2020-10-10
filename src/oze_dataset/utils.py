@@ -138,16 +138,22 @@ def npz_check(datasets_path, output_filename, credentials=None):
     def download_files(files_to_download):
         def login_to_challengedata_website(credentials):
             def get_credentials(credentials):
+                try_local = False
                 if credentials is None:
+                    try_local = True
                     challenge_user_name, challenge_user_password = _get_local_credentials()
-                    if None in [challenge_user_name, challenge_user_password]:
-                        # pylint: disable=line-too-long
-                        link = 'https://github.com/maxjcohen/ozechallenge_benchmark/blob/master/README.md#download-using-credentials-optional'
-                        raise ValueError(
-                            f'Missing login credentials. Make sure you follow {link}')
                 else:
                     challenge_user_name = credentials['user_name']
                     challenge_user_password = credentials['user_password']
+                    if None in [challenge_user_name, challenge_user_password]:
+                        try_local = True
+                if try_local:
+                    challenge_user_name, challenge_user_password = _get_local_credentials()
+                if None in [challenge_user_name, challenge_user_password]:
+                    # pylint: disable=line-too-long
+                    link = 'https://github.com/maxjcohen/ozechallenge_benchmark/blob/master/README.md#download-using-credentials-optional'
+                    raise ValueError(
+                        f'Missing login credentials. Make sure you follow {link}')
                 return challenge_user_name, challenge_user_password
             login_url = "https://challengedata.ens.fr/login/"
             session_requests = requests.session()
