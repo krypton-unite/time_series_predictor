@@ -150,6 +150,7 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'sklearn',
+            'jupyter',
             'jupyterlab',
             'matplotlib',
             'python-dotenv',
