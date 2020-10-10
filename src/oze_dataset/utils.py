@@ -219,7 +219,7 @@ def csv2npz(dataset_x_path,
             dataset_y_path,
             output_path,
             filename,
-            labels_path=Path(__file__).parent.joinpath('labels.json')):
+            labels_path=Path('src', 'oze_dataset').joinpath('labels.json')):
     """Load input dataset from csv and create x_train tensor."""
     # Load dataset as csv
     x = pd.read_csv(dataset_x_path)
