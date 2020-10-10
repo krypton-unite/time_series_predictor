@@ -86,9 +86,6 @@ def package_files(directory):
             paths.append(os.path.join('..', path, filename))
     return paths
 
-
-extra_files = package_files('time_series_predictor/sklearn')
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -105,8 +102,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=['time_series_predictor', 'src', 'src/oze_dataset'],
-    package_data={'': extra_files},
+    packages=['time_series_predictor', 'time_series_predictor/sklearn', 'src', 'src/oze_dataset'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -150,7 +146,6 @@ setuptools.setup(
             'pandas',
             'seaborn',
             'sklearn',
-            'jupyter',
             'jupyterlab',
             'matplotlib',
             'python-dotenv',
