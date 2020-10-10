@@ -8,6 +8,31 @@ import subprocess
 
 import setuptools
 
+class BuildCommand(distutils.cmd.Command):
+    """A custom command to build the package."""
+
+    description = 'builds the package'
+    user_options = [
+        # The format is (long option, short option, description).
+        ('output-file=', None, 'path to output requirements file'),
+    ]
+
+    def initialize_options(self):
+        """Set default values for options."""
+        # Each user option must be listed here with their default value.
+        self.input_file = 'requirements-lock.txt'
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Run command."""
+        command = ['python', 'setup.py', 'sdist', 'bdist_wheel']
+        self.announce(
+            'Running command: %s' % str(command),
+            level=distutils.log.INFO)
+        subprocess.check_call(command)
+
 class SyncCommand(distutils.cmd.Command):
     """A custom command to run pip-sync with requirements-lock.txt."""
 
@@ -96,6 +121,7 @@ setuptools.setup(
     cmdclass={
         'upgrade': UpgradeCommand,
         'synchronize': SyncCommand,
+        'build': BuildCommand
     },
     name="time_series_predictor",
     version="1.3.4",
@@ -105,7 +131,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=['app/time_series_predictor'],
+    packages=['time_series_predictor'],
     package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -52,7 +52,7 @@ pytest -s
 
 ```terminal
 pip install -e .[docs]
-# cd app/docs
+# cd docs
 # make html
-sphinx-build app/docs/source app/docs/build
+sphinx-build docs/source docs/build
 ```

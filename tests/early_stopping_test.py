@@ -6,10 +6,10 @@ import pytest
 import torch
 from skorch.callbacks import EarlyStopping
 
-from app.src.flights_dataset import FlightsDataset
-from app.src.model import BenchmarkLSTM
-from app.src.oze_dataset import OzeNPZDataset, npz_check
-from app.time_series_predictor import TimeSeriesPredictor
+from src.flights_dataset import FlightsDataset
+from src.model import BenchmarkLSTM
+from src.oze_dataset import OzeNPZDataset, npz_check
+from time_series_predictor import TimeSeriesPredictor
 
 
 def _get_credentials(user_name, user_password):
@@ -21,7 +21,7 @@ def _get_credentials(user_name, user_password):
 def _get_dataset(user_name, user_password):
     return OzeNPZDataset(
         dataset_path=npz_check(
-            Path('app', 'datasets'),
+            Path('datasets'),
             'dataset',
             credentials=_get_credentials(user_name, user_password)
         )
