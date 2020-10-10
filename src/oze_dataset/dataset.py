@@ -169,9 +169,7 @@ class OzeNPZDataset(TimeSeriesDataset):
     def make_future_dataframe(self, *args, include_history=True, **kwargs):
         parent_path = Path(__file__).parent
         dataset_eval = OzeEvaluationDataset(
-            parent_path.joinpath(
-                os.path.join('..', '..', 'datasets', 'x_test_QK7dVsy.csv')
-            ),
+            Path('docs', 'source', 'notebooks', 'datasets', 'x_test_QK7dVsy.csv'),
             TIME_SERIES_LENGTH, labels_path=parent_path.joinpath('labels.json'))
         if include_history:
             return np.concatenate([self.x, dataset_eval.x])
