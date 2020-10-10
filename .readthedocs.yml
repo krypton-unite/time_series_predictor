@@ -27,6 +27,6 @@ formats: []
 python:
     install:
         - method: pip
-          path: .
+          path: app
           extra_requirements:
             - docs
