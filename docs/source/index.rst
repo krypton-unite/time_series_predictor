@@ -11,16 +11,16 @@ Time Series Predictor documentation
    :target: https://time-series-predictor.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://travis-ci.org/DanielAtKrypton/time_series_predictor.svg?branch=master
-   :target: https://travis-ci.org/github/DanielAtKrypton/time_series_predictor
+.. image:: https://travis-ci.org/krypton-unite/time_series_predictor.svg?branch=master
+   :target: https://travis-ci.org/github/krypton-unite/time_series_predictor
    :alt: Travis
 
-.. image:: https://codecov.io/gh/DanielAtKrypton/time_series_predictor/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/DanielAtKrypton/time_series_predictor
+.. image:: https://codecov.io/gh/krypton-unite/time_series_predictor/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/krypton-unite/time_series_predictor
    :alt: Code Coverage
 
-.. image:: https://img.shields.io/github/license/DanielAtKrypton/time_series_predictor
-   :target: https://github.com/DanielAtKrypton/time_series_predictor
+.. image:: https://img.shields.io/github/license/krypton-unite/time_series_predictor
+   :target: https://github.com/krypton-unite/time_series_predictor
    :alt: GitHub license
 
 Welcome to Time Series Predictor's documentation!
@@ -28,7 +28,7 @@ Welcome to Time Series Predictor's documentation!
 This documents the `python package`_ sourced from the following `repository`_.
 
 .. _python package: https://pypi.org/project/time-series-predictor/
-.. _repository: https://github.com/DanielAtKrypton/time_series_predictor.git
+.. _repository: https://github.com/krypton-unite/time_series_predictor.git
 
 *****
 Usage
