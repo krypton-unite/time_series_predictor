@@ -1,13 +1,13 @@
 # Time Series Predictor
 
-[![PyPI version](https://badge.fury.io/py/time-series-predictor.svg)](https://badge.fury.io/py/time-series-predictor) [![Documentation Status](https://readthedocs.org/projects/timeseriespredictor/badge/?version=latest)](https://timeseriespredictor.readthedocs.io/en/latest/?badge=latest) [![travis](https://travis-ci.org/DanielAtKrypton/time_series_predictor.svg?branch=master)](https://travis-ci.org/github/DanielAtKrypton/time_series_predictor) [![codecov](https://codecov.io/gh/DanielAtKrypton/time_series_predictor/branch/master/graph/badge.svg)](https://codecov.io/gh/DanielAtKrypton/time_series_predictor) [![Requirements Status](https://requires.io/github/DanielAtKrypton/time_series_predictor/requirements.svg?branch=master)](https://requires.io/github/DanielAtKrypton/time_series_predictor/requirements/?branch=master) [![GitHub license](https://img.shields.io/github/license/DanielAtKrypton/time_series_predictor)](https://github.com/DanielAtKrypton/time_series_predictor)
+[![PyPI version](https://badge.fury.io/py/time-series-predictor.svg)](https://badge.fury.io/py/time-series-predictor) [![Documentation Status](https://readthedocs.org/projects/time-series-predictor/badge/?version=latest)](https://time-series-predictor.readthedocs.io/en/latest/?badge=latest) [![travis](https://travis-ci.org/krypton-unite/time_series_predictor.svg?branch=master)](https://travis-ci.org/github/krypton-unite/time_series_predictor) [![codecov](https://codecov.io/gh/krypton-unite/time_series_predictor/branch/master/graph/badge.svg)](https://codecov.io/gh/krypton-unite/time_series_predictor) [![Requirements Status](https://requires.io/github/krypton-unite/time_series_predictor/requirements.svg?branch=master)](https://requires.io/github/krypton-unite/time_series_predictor/requirements/?branch=master) [![GitHub license](https://img.shields.io/github/license/krypton-unite/time_series_predictor)](https://github.com/krypton-unite/time_series_predictor)
 
 ## Usage
 
 Please refer to the following examples:
 
-- [example_flights_dataset.ipynb](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/docs/source/notebooks/example_flights_dataset.ipynb)
-- [example_oze_challenge.ipynb](https://github.com/DanielAtKrypton/time_series_predictor/blob/master/docs/source/notebooks/example_oze_challenge.ipynb)
+- [example_flights_dataset.ipynb](https://time-series-predictor.readthedocs.io/en/latest/notebooks/example_flights_dataset.html)
+- [example_oze_challenge.ipynb](https://time-series-predictor.readthedocs.io/en/latest/notebooks/example_oze_challenge.html)
 
 ## Pre requisistes installation
 

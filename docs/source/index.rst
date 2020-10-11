@@ -7,8 +7,8 @@
 Time Series Predictor documentation
 ###################################
 
-.. image:: https://readthedocs.org/projects/timeseriespredictor/badge/?version=latest
-   :target: https://timeseriespredictor.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/time-series-predictor/badge/?version=latest
+   :target: https://time-series-predictor.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
 .. image:: https://travis-ci.org/DanielAtKrypton/time_series_predictor.svg?branch=master
