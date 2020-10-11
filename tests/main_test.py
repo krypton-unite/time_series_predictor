@@ -11,6 +11,7 @@ from src.flights_dataset import FlightsDataset
 from src.model import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
+@pytest.mark.skip
 def test_lstm_tsp_fitting():
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -44,6 +45,7 @@ def test_lstm_tsp_fitting_in_cpu():
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > 0.2
 
+@pytest.mark.skip
 def test_lstm_tsp_forecast():
     """
     Tests the LSTMTimeSeriesPredictor forecast
