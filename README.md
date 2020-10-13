@@ -50,9 +50,21 @@ pytest -s
 
 ## Build docs
 
-```terminal
+### Windows
+
+#### ImageMagick requirement
+
+In an elevated powershell prompt install it by:
+
+```powershell
+choco install imagemagick
+```
+
+```powershell
 pip install -e .[docs]
 # cd docs
-# make html
-sphinx-build docs/source docs/build
+.\make html
+.\make latex
+# sphinx-build docs/source docs/build
+.\build\latex\make
 ```
