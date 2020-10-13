@@ -15,7 +15,7 @@ sphinx:
 
 # Optionally build your docs in additional formats such as PDF
 # Don't build any extra formats
-formats: []
+formats: [pdf]
 # # Build PDF & ePub
 # formats:
 #     - epub

@@ -50,7 +50,43 @@ pytest -s
 
 ## Build docs
 
-### Windows
+### Windows Requirements
+
+#### Make
+
+In an elevated powershell prompt install it by:
+
+```powershell
+choco install cmake
+```
+
+#### TexLive
+
+Download and install TexLive from [ctan.org](http://mirror.ctan.org/systems/texlive/tlnet/install-tl-windows.exe)
+
+#### Perl requirement
+
+In an elevated powershell prompt install it by:
+
+```powershell
+choco install activeperl
+```
+
+#### CPANM requirement
+
+In an elevated powershell prompt install it by:
+
+```powershell
+curl -L https://cpanmin.us | perl - App::cpanminus
+```
+
+#### Latex indent requirement
+
+```powershell
+git clone https://github.com/cmhughes/latexindent.pl.git
+cd latexindent.pl/helper-scripts
+perl latexindent-module-installer.pl
+```
 
 #### ImageMagick requirement
 
@@ -59,6 +95,10 @@ In an elevated powershell prompt install it by:
 ```powershell
 choco install imagemagick
 ```
+
+----------------
+
+### Build process
 
 ```powershell
 pip install -e .[docs]
