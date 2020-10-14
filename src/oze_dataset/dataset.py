@@ -162,7 +162,7 @@ class OzeNPZDataset(TimeSeriesDataset):
     # pylint: disable=arguments-differ
     def make_future_dataframe(self, *args, include_history=True, **kwargs):
         dataset_eval = OzeEvaluationDataset(
-            Path('docs', 'source', 'notebooks', 'datasets', 'x_test_QK7dVsy.csv'),
+            Path(Path(__file__).parent.parent.parent, 'docs', 'source', 'notebooks', 'datasets', 'x_test_QK7dVsy.csv'),
             TIME_SERIES_LENGTH, given_labels=labels)
         if include_history:
             return np.concatenate([self.x, dataset_eval.x])
