@@ -8,7 +8,8 @@ from skorch.callbacks import EarlyStopping
 
 from src.flights_dataset import FlightsDataset
 from src.model import BenchmarkLSTM
-from src.oze_dataset import OzeNPZDataset, npz_check
+from src.oze_dataset import OzeNPZDataset
+from oze_dataset import npz_check
 from time_series_predictor import TimeSeriesPredictor
 
 
@@ -27,7 +28,7 @@ def _get_dataset(user_name, user_password):
         )
     )
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_regular(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting

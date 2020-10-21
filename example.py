@@ -7,11 +7,18 @@ import torch
 from skorch.callbacks import EarlyStopping
 from src.flights_dataset import FlightsDataset
 from src.model import BenchmarkLSTM
-from src.oze_dataset import OzeNPZDataset, npz_check
+from src.oze_dataset import OzeNPZDataset
+from oze_dataset import npz_check
 from time_series_predictor import TimeSeriesPredictor
+from dotenv import load_dotenv
+import os
 # from tune_sklearn.tune_gridsearch import TuneGridSearchCV
 
 if __name__ == "__main__":
+    load_dotenv(Path('src', '.env.test.local'))
+    credentials = {}
+    credentials['user_name'] = os.getenv("CHALLENGE_USER_NAME")
+    credentials['user_password'] = os.getenv("CHALLENGE_USER_PASSWORD")
     tsp = TimeSeriesPredictor(
         BenchmarkLSTM(),
         max_epochs=500,
@@ -22,7 +29,8 @@ if __name__ == "__main__":
     dataset = OzeNPZDataset(
         dataset_path=npz_check(
             Path('docs', 'source', 'notebooks', 'datasets'),
-            'dataset'
+            'dataset',
+            credentials=credentials
         )
     )
 
