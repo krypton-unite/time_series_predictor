@@ -29,7 +29,13 @@ class InitEnvCommand(distutils.cmd.Command):
             level=distutils.log.INFO)
         subprocess.check_call(command)
 
-        command = 'pip install wheel pip-tools'
+        command = 'pip install wheel'
+        self.announce(
+            'Running command: %s' % str(command),
+            level=distutils.log.INFO)
+        subprocess.check_call(command)
+
+        command = 'pip install pip-tools'
         self.announce(
             'Running command: %s' % str(command),
             level=distutils.log.INFO)
