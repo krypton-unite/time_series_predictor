@@ -7,7 +7,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 class InitEnvCommand(distutils.cmd.Command):
     """A custom command to initialize the virtual environment."""
@@ -143,7 +143,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=find_packages(exclude=("tests",)),
+    packages=['time_series_predictor'],
     package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",
