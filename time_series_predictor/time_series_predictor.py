@@ -13,7 +13,7 @@ from skorch.callbacks import Callback, EarlyStopping
 
 from .min_max_scaler import MinMaxScaler as Scaler
 from .sklearn import TransformedTargetRegressor, sample_predict
-from .time_series_dataset import TimeSeriesDataset
+from time_series_dataset import TimeSeriesDataset
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)

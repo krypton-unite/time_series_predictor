@@ -1,6 +1,6 @@
 Flights Dataset module
 ======================
 
-.. automodule:: src.flights_dataset
+.. automodule:: flights_time_series_dataset.FlightsDataset
    :members:
    :show-inheritance:

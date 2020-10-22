@@ -105,9 +105,13 @@ threadpoolctl==2.1.0 \
     --hash=sha256:38b74ca20ff3bb42caca8b00055111d74159ee95c4370882bbff2b93d24da725 \
     --hash=sha256:ddc57c96a38beb63db45d6c159b5ab07b6bced12c45a1f07b2b92f272aebfa6b \
     # via scikit-learn
+time-series-dataset==0.0.1 \
+    --hash=sha256:22e30955cbf51c62b1b2809d07bf0b8e3d6112156440fb264e94e7d4cfac0d14 \
+    --hash=sha256:779a206afe065d52383181571987628c71551271978d09df296e4d2f2fbe0e42 \
+    # via time_series_predictor (setup.py)
 torch==1.6.0+cu101 \
     --hash=sha256:c98a4e6320321d9ffdaa8cab750868c9c01da7375071252cf966e7f9461182b7 \
-    # via time_series_predictor (setup.py)
+    # via time-series-dataset, time_series_predictor (setup.py)
 tqdm==4.50.2 \
     --hash=sha256:43ca183da3367578ebf2f1c2e3111d51ea161ed1dc4e6345b86e27c2a93beff7 \
     --hash=sha256:69dfa6714dee976e2425a9aab84b622675b7b1742873041e3db8a8e86132a4af \

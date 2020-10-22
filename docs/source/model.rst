@@ -1,6 +1,6 @@
 Benchmark LSTM module
 =====================
 
-.. automodule:: src.model
+.. automodule:: time_series_models.BenchmarkLSTM
    :members:
    :show-inheritance:

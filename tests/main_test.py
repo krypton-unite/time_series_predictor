@@ -7,8 +7,8 @@ import torch
 import pytest
 from sklearn.metrics import r2_score  # mean_squared_error
 
-from src.flights_dataset import FlightsDataset
-from src.model import BenchmarkLSTM
+from flights_time_series_dataset import FlightsDataset
+from time_series_models import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
 @pytest.mark.skip

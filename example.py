@@ -1,24 +1,26 @@
 """
 Tests the LSTMTimeSeriesPredictor
 """
+import os
 from pathlib import Path
 
 import torch
-from skorch.callbacks import EarlyStopping
-from src.flights_dataset import FlightsDataset
-from src.model import BenchmarkLSTM
-from src.oze_dataset import OzeNPZDataset
-from oze_dataset import npz_check
-from time_series_predictor import TimeSeriesPredictor
 from dotenv import load_dotenv
-import os
+from flights_time_series_dataset import FlightsDataset
+from oze_dataset import OzeNPZDataset, npz_check
+from skorch.callbacks import EarlyStopping
+
+from time_series_models import BenchmarkLSTM
+from time_series_predictor import TimeSeriesPredictor
+
 # from tune_sklearn.tune_gridsearch import TuneGridSearchCV
 
 if __name__ == "__main__":
-    load_dotenv(Path('src', '.env.test.local'))
-    credentials = {}
-    credentials['user_name'] = os.getenv("CHALLENGE_USER_NAME")
-    credentials['user_password'] = os.getenv("CHALLENGE_USER_PASSWORD")
+    load_dotenv(Path('test', '.env.test.local'))
+    credentials = {
+        'user_name': os.getenv("CHALLENGE_USER_NAME"),
+        'user_password': os.getenv("CHALLENGE_USER_PASSWORD")
+    }
     tsp = TimeSeriesPredictor(
         BenchmarkLSTM(),
         max_epochs=500,

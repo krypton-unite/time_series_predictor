@@ -6,7 +6,7 @@ import distutils.log
 import os
 import subprocess
 
-import setuptools
+from setuptools import setup, find_packages
 
 class SyncCommand(distutils.cmd.Command):
     """A custom command to run pip-sync with requirements-lock.txt."""
@@ -92,7 +92,7 @@ extra_files = package_files('time_series_predictor/sklearn')
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
+setup(
     cmdclass={
         'upgrade': UpgradeCommand,
         'synchronize': SyncCommand
@@ -105,7 +105,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://timeseriespredictor.readthedocs.io/",
-    packages=['time_series_predictor', 'src'],
+    packages=find_packages(exclude=("tests",)),
     package_data={'': extra_files},
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -117,7 +117,8 @@ setuptools.setup(
         'torch',
         'skorch',
         'scipy',  # via skorch
-        'psutil'
+        'psutil',
+        'time-series-dataset'
     ],
     extras_require={
         'dev': [
@@ -139,7 +140,9 @@ setuptools.setup(
             'python-dotenv',
             'lxml',
             'requests',
-            'oze-dataset'
+            'oze-dataset',
+            'flights-time-series-dataset',
+            'time-series-models'
         ],
         'docs': [
             'sphinx',
@@ -155,7 +158,9 @@ setuptools.setup(
             'matplotlib',
             'python-dotenv',
             'lxml',
-            'oze-dataset'
+            'oze-dataset',
+            'flights-time-series-dataset',
+            'time-series-models'
         ]
     }
 )

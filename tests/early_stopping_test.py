@@ -4,12 +4,10 @@ from pathlib import Path
 
 import pytest
 import torch
+from flights_time_series_dataset import FlightsDataset
+from oze_dataset import OzeNPZDataset, npz_check
 from skorch.callbacks import EarlyStopping
-
-from src.flights_dataset import FlightsDataset
-from src.model import BenchmarkLSTM
-from src.oze_dataset import OzeNPZDataset
-from oze_dataset import npz_check
+from time_series_models import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
 

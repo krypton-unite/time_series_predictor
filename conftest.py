@@ -11,7 +11,7 @@ def pytest_addoption(parser):
     Args:
         parser ([type]): [description]
     """
-    load_dotenv(Path('src', '.env.test.local'))
+    load_dotenv(Path('test', '.env.test.local'))
     challenge_user_name = os.getenv("CHALLENGE_USER_NAME")
     challenge_user_password = os.getenv("CHALLENGE_USER_PASSWORD")
     parser.addoption("--user_name", action="store",
