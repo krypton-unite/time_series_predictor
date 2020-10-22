@@ -5,8 +5,35 @@ import distutils.cmd
 import distutils.log
 import os
 import subprocess
+from pathlib import Path
 
 from setuptools import setup, find_packages
+
+class InitEnvCommand(distutils.cmd.Command):
+    """A custom command to initialize the virtual environment."""
+
+    description = 'initialize the virtual environment'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Run command."""
+        command = 'python -m pip install --upgrade pip'
+        self.announce(
+            'Running command: %s' % str(command),
+            level=distutils.log.INFO)
+        subprocess.check_call(command)
+
+        command = 'pip install wheel pip-tools'
+        self.announce(
+            'Running command: %s' % str(command),
+            level=distutils.log.INFO)
+        subprocess.check_call(command)
 
 class SyncCommand(distutils.cmd.Command):
     """A custom command to run pip-sync with requirements-lock.txt."""
@@ -57,15 +84,19 @@ class UpgradeCommand(distutils.cmd.Command):
     def finalize_options(self):
         """Post-process options."""
         if self.output_file:
-            assert os.path.exists(self.output_file), (
-                'Output file %s does not exist.' % self.output_file)
+            # assert os.path.exists(self.output_file), (
+            #     'Output file %s does not exist.' % self.output_file)
+            pass
 
     def run(self):
         """Run command."""
         command = ['pip-compile']
-        if self.output_file:
+        if Path(self.output_file).is_file():
             # pylint: disable=line-too-long
             command = command + ['--find-links=https://download.pytorch.org/whl/torch_stable.html', '--upgrade', '--generate-hashes', '--output-file=%s' % self.output_file]
+        else:
+            open(self.output_file, "w+")
+            command = command + ['--find-links=https://download.pytorch.org/whl/torch_stable.html', '--generate-hashes', '--output-file=%s' % self.output_file]
         # command.append(os.getcwd())
         print(' '.join(command))
         self.announce(
@@ -94,6 +125,7 @@ with open("README.md", "r") as fh:
 
 setup(
     cmdclass={
+        'init_env': InitEnvCommand,
         'upgrade': UpgradeCommand,
         'synchronize': SyncCommand
     },
