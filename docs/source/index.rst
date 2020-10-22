@@ -7,6 +7,10 @@
 Time Series Predictor documentation
 ###################################
 
+.. image:: https://badge.fury.io/py/time-series-predictor.svg
+   :target: https://badge.fury.io/py/time-series-predictor
+   :alt: PyPI version
+
 .. image:: https://readthedocs.org/projects/time-series-predictor/badge/?version=latest
    :target: https://time-series-predictor.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
