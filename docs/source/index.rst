@@ -47,7 +47,7 @@ Documentation for the Code
    :maxdepth: 2
    
    usage.rst
-   example_modules.rst
+   important_required_modules.rst
    modules.rst
 
 Indices and tables

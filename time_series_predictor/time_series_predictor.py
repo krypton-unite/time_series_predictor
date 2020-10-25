@@ -7,13 +7,14 @@ import warnings
 
 import psutil
 import torch
-from sklearn.pipeline import Pipeline
 from skorch import NeuralNetRegressor
 from skorch.callbacks import Callback, EarlyStopping
+from time_series_dataset import TimeSeriesDataset
+
+from sklearn.pipeline import Pipeline
 
 from .min_max_scaler import MinMaxScaler as Scaler
 from .sklearn import TransformedTargetRegressor, sample_predict
-from time_series_dataset import TimeSeriesDataset
 
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
@@ -48,6 +49,7 @@ class TimeSeriesPredictor:
     ----------
     **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
     early_stopping: torch.callbacks.EarlyStopping object
+
     """
 
     def __init__(self, net, early_stopping: EarlyStopping = None, **neural_net_regressor_params):
@@ -85,6 +87,7 @@ class TimeSeriesPredictor:
         *args: variable length unnamed args list
         **kwargs: variable length named args list
 
+
         :returns: future dataframe
 
         """
@@ -101,7 +104,6 @@ class TimeSeriesPredictor:
 
         :returns: future forecast
 
-
         """
         return self.sample_predict(self.make_future_dataframe(*args, **kwargs))
 
@@ -113,6 +115,7 @@ class TimeSeriesPredictor:
         *args: variable length unnamed args list
         **kwargs: variable length named args list
 
+
         :returns: future forecast
 
         """
@@ -122,6 +125,7 @@ class TimeSeriesPredictor:
         """Run predictions
 
         :param inp: input
+
         """
         return self.ttr.predict(inp)
 
@@ -129,6 +133,7 @@ class TimeSeriesPredictor:
         """Run predictions
 
         :param inp: input
+
         """
         return sample_predict(self.ttr, inp)
 
@@ -142,6 +147,7 @@ class TimeSeriesPredictor:
         **fit_params: dict
           Additional parameters passed to the forward method of the module and to the
           self.train_split call.
+        
         """
         print(f"Using device {self.neural_net_regressor_params.get('device')}")
         self.dataset = dataset
@@ -166,6 +172,7 @@ class TimeSeriesPredictor:
 
         :param dataset: dataset to evaluate.
         :returns: mean r2_score.
+
         """
         dataset_length = len(dataset)
         if dataset_length == 1:
