@@ -189,15 +189,14 @@ class TimeSeriesPredictor:
         for idx, (inp, out) in enumerate(dataset):
             scores_to_calculate.put([idx, (inp, out)])
         output_list = []
-        score_calculators = []
-        for _ in range(dataset_length if dataset_length < self.cpu_count else self.cpu_count):
-            score_calculator = ScoreCalculator(
+        score_calculators = [
+            ScoreCalculator(
                 scores_to_calculate,
                 locks,
                 self.ttr.score,
                 output_list
-            )
-            score_calculators.append(score_calculator)
+            ) for _ in range(dataset_length if dataset_length < self.cpu_count else self.cpu_count)
+        ]
         for score_calculator in score_calculators:
             score_calculator.start()
         for score_calculator in score_calculators:
