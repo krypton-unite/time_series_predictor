@@ -35,7 +35,10 @@ release = version
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'sphinx.ext.imgconverter',
+    # 'sphinx.ext.imgconverter',
+    'sphinxcontrib.inkscapeconverter',
+    # 'sphinxcontrib.rsvgconverter',
+    # 'sphinxcontrib.cairosvgconverter',
     'sphinx_autodoc_typehints',
     'sphinx.ext.intersphinx',
     'nbsphinx',

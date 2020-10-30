@@ -198,7 +198,8 @@ setup(
             'lxml',
             'oze-dataset',
             'flights-time-series-dataset',
-            'time-series-models'
+            'time-series-models',
+            'sphinxcontrib-svg2pdfconverter'
         ]
     }
 )
