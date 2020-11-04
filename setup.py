@@ -183,10 +183,12 @@ setup(
             'time-series-models'
         ],
         'docs': [
+            'nbsphinx',
             'sphinx',
+            'IPython',
+            'ipykernel',
             'rstcheck',
             'sphinx-autodoc-typehints',
-            'nbsphinx',
             'recommonmark',
             'sphinx_rtd_theme',
             'pandas',

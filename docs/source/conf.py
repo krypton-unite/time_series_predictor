@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'nbsphinx',
     'recommonmark',
+    'IPython.sphinxext.ipython_console_highlighting',
 ]
 
 napoleon_google_docstring = False
