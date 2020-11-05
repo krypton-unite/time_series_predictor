@@ -26,7 +26,7 @@ def _get_dataset(user_name, user_password):
         )
     )
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_regular(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting
