@@ -6,3 +6,5 @@ pip install pip-tools
 
 $script = $PSScriptRoot+"\pip-sync.ps1"
 & $script
+
+pip install -e .[dev,test,docs]

@@ -103,9 +103,11 @@ class TimeSeriesPredictor:
 
 
         :returns: future forecast
+        :returns: future dataframe
 
         """
-        return self.sample_predict(self.make_future_dataframe(*args, **kwargs))
+        x_pred = self.make_future_dataframe(*args, **kwargs)
+        return self.sample_predict(x_pred), x_pred
 
     def forecast(self, *args, **kwargs):
         """Future forecast
@@ -117,9 +119,12 @@ class TimeSeriesPredictor:
 
 
         :returns: future forecast
+        :returns: future dataframe
 
         """
-        return self.predict(self.make_future_dataframe(*args, **kwargs))
+
+        x_pred = self.make_future_dataframe(*args, **kwargs)
+        return self.predict(x_pred), x_pred
 
     def predict(self, inp):
         """Run predictions
