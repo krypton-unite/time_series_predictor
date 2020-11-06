@@ -67,14 +67,14 @@ def test_lstm_tsp_forecast():
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > 0.98
 
-    netout = tsp.sample_forecast(last_n)
+    netout, _ = tsp.forecast(last_n)
 
     # Select any training example just for comparison
     idx = np.random.randint(0, len(tsp.dataset))
     _, whole_y = whole_fd[idx]
 
     y_true = whole_y[-last_n:, :]   # get only known future outputs
-    y_pred = netout[-last_n:, :]    # get only last N predicted outputs
+    y_pred = netout[idx, -last_n:, :]    # get only last N predicted outputs
     r2s = r2_score(y_true, y_pred)
     assert r2s > -1
 
@@ -98,13 +98,13 @@ def test_lstm_tsp_forecast_in_cpu():
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > 0.98
 
-    netout = tsp.sample_forecast(last_n)
+    netout, _ = tsp.forecast(last_n)
 
     # Select any training example just for comparison
     idx = np.random.randint(0, len(tsp.dataset))
     _, whole_y = whole_fd[idx]
 
     y_true = whole_y[-last_n:, :]   # get only known future outputs
-    y_pred = netout[-last_n:, :]    # get only last N predicted outputs
+    y_pred = netout[idx, -last_n:, :]    # get only last N predicted outputs
     r2s = r2_score(y_true, y_pred)
     assert r2s > -1
