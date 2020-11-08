@@ -8,7 +8,7 @@ import warnings
 import psutil
 import torch
 from skorch import NeuralNetRegressor
-from skorch.callbacks import Callback, EarlyStopping
+from skorch.callbacks import Callback, EarlyStopping, Checkpoint
 from time_series_dataset import TimeSeriesDataset
 
 from sklearn.pipeline import Pipeline
@@ -19,23 +19,21 @@ from .sklearn import TransformedTargetRegressor, sample_predict
 # Show switch to cpu warning
 warnings.filterwarnings("default", category=ResourceWarning)
 
-def _get_nnr(net, early_stopping: EarlyStopping = None, **neural_net_regressor_params):
-    class InputShapeSetter(Callback):
-        """InputShapeSetter
-        dynamically set the input size of the PyTorch module based on the data
+class InputShapeSetter(Callback):
+    """InputShapeSetter
+    dynamically set the input size of the PyTorch module based on the data
 
-        Typically, it’s up to the user to determine the shape of the input data when defining
-        the PyTorch module. This can sometimes be inconvenient, e.g. when the shape is only
-        known at runtime. E.g., when using :class:`sklearn.feature_selection.VarianceThreshold`,
-        you cannot know the number of features in advance. The best solution would be to set
-        the input size dynamically.
-        """
-        def on_train_begin(self, net, X=None, y=None, **kwargs):
-            net.set_params(module__input_dim=X.shape[-1],
-                        module__output_dim=y.shape[-1])
-    callbacks = [InputShapeSetter()]
-    if early_stopping is not None:
-        callbacks.append(early_stopping)
+    Typically, it’s up to the user to determine the shape of the input data when defining
+    the PyTorch module. This can sometimes be inconvenient, e.g. when the shape is only
+    known at runtime. E.g., when using :class:`sklearn.feature_selection.VarianceThreshold`,
+    you cannot know the number of features in advance. The best solution would be to set
+    the input size dynamically.
+    """
+    def on_train_begin(self, net, X=None, y=None, **kwargs):
+        net.set_params(module__input_dim=X.shape[-1],
+                    module__output_dim=y.shape[-1])
+
+def _get_nnr(net, callbacks, **neural_net_regressor_params):
     return NeuralNetRegressor(
         net,
         callbacks=callbacks,
@@ -56,11 +54,14 @@ class TimeSeriesPredictor:
         self.dataset = None
         self.early_stopping = early_stopping
         self.cpu_count = psutil.cpu_count(logical=True)
+        self.checkpoint = Checkpoint()
         if 'train_split' in neural_net_regressor_params:
             train_split = neural_net_regressor_params.get('train_split')
-            if train_split is None and early_stopping is not None:
-                if early_stopping.monitor is 'valid_loss':
-                    raise ValueError('Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.')
+            if train_split is None:
+                self.checkpoint.monitor = 'train_loss_best'
+                if early_stopping is not None:
+                    if early_stopping.monitor is 'valid_loss':
+                        raise ValueError('Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.')
         if 'device' in neural_net_regressor_params:
             device = neural_net_regressor_params.get('device')
         else:
@@ -71,7 +72,14 @@ class TimeSeriesPredictor:
             regressor=Pipeline(
                 [
                     ('input scaler', Scaler()),
-                    ('regressor', _get_nnr(net, early_stopping, **neural_net_regressor_params))
+                    ('regressor', _get_nnr(
+                        net,
+                        [
+                            InputShapeSetter(),
+                            early_stopping,
+                            self.checkpoint
+                        ],
+                        **neural_net_regressor_params))
                 ]
             ),
             transformer=Scaler()
@@ -166,11 +174,18 @@ class TimeSeriesPredictor:
                 self.neural_net_regressor_params.setdefault('device', 'cpu')
                 self.ttr.regressor['regressor'] = _get_nnr(
                     self.ttr.regressor['regressor'].module,
-                    self.early_stopping,
+                    [
+                        InputShapeSetter(),
+                        self.early_stopping,
+                        self.checkpoint
+                    ],
                     **self.neural_net_regressor_params
                 )
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
-            raise
+            else:
+                raise
+            self.ttr.regressor['regressor'].initialize()
+            self.ttr.regressor['regressor'].load_params(checkpoint=self.checkpoint)
 
     def score(self, dataset):
         """Compute the mean r2_score of a network on a given dataset.

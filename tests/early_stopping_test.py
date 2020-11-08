@@ -26,7 +26,7 @@ def _get_dataset(user_name, user_password):
         )
     )
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_regular(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -43,7 +43,7 @@ def test_regular(user_name, user_password):
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > -100
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_no_train_split():
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -61,7 +61,7 @@ def test_no_train_split():
         'Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.'
     )
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_train_loss_monitor_no_train_split():
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -77,7 +77,7 @@ def test_train_loss_monitor_no_train_split():
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > -300
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_train_loss_monitor(user_name, user_password):
     """
     Tests the LSTMTimeSeriesPredictor fitting
