@@ -7,6 +7,7 @@ import warnings
 
 import psutil
 import torch
+import tempfile
 from skorch import NeuralNetRegressor
 from skorch.callbacks import Callback, EarlyStopping, Checkpoint
 from time_series_dataset import TimeSeriesDataset
@@ -54,7 +55,7 @@ class TimeSeriesPredictor:
         self.dataset = None
         self.early_stopping = early_stopping
         self.cpu_count = psutil.cpu_count(logical=True)
-        self.checkpoint = Checkpoint()
+        self.checkpoint = Checkpoint(dirname=tempfile.gettempdir())
         if 'train_split' in neural_net_regressor_params:
             train_split = neural_net_regressor_params.get('train_split')
             if train_split is None:
