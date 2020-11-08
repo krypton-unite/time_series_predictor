@@ -156,7 +156,8 @@ setup(
         'skorch',
         'scipy',  # via skorch
         'psutil',
-        'time-series-dataset'
+        'time-series-dataset',
+        'IPython'
     ],
     extras_require={
         'dev': [
@@ -185,7 +186,6 @@ setup(
         'docs': [
             'nbsphinx',
             'sphinx',
-            'IPython',
             'ipykernel',
             'rstcheck',
             'sphinx-autodoc-typehints',
