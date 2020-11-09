@@ -29,6 +29,7 @@ class CheckpointHandler(Callback):
     """
 
     def on_train_end(self, net, X=None, y=None, **kwargs):
+        print("Loading the best network from the last checkpoint.")
         with io.capture_output() as _:
             net.initialize()
             net.set_params(module__input_dim=X.shape[-1],
