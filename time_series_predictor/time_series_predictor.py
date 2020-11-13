@@ -8,13 +8,13 @@ import warnings
 
 import psutil
 import torch
-from skorch import NeuralNetRegressor
 from skorch.callbacks import Callback, Checkpoint, EarlyStopping
 from time_series_dataset import TimeSeriesDataset
 from IPython.utils import io
 
 from sklearn.pipeline import Pipeline
 
+from .l1_regularized_nnr import L1RegularizedNNR
 from .min_max_scaler import MinMaxScaler as Scaler
 from .sklearn import TransformedTargetRegressor, sample_predict
 
@@ -52,11 +52,11 @@ class InputShapeSetter(Callback):
         net.set_params(module__input_dim=X.shape[-1],
                        module__output_dim=y.shape[-1])
 
-def _get_nnr(net, callbacks, **neural_net_regressor_params):
-    return NeuralNetRegressor(
+def _get_nnr(net, callbacks, **l1_regularized_nnr_params):
+    return L1RegularizedNNR(
         net,
         callbacks=callbacks,
-        **neural_net_regressor_params
+        **l1_regularized_nnr_params
     )
 
 
@@ -65,31 +65,31 @@ class TimeSeriesPredictor:
 
     Parameters
     ----------
-    **neural_net_regressor_params: skorch NeuralNetRegressor parameters.
+    **l1_regularized_nnr_params: skorch L1RegularizedNNR parameters.
     early_stopping: torch.callbacks.EarlyStopping object
 
     """
 
-    def __init__(self, net, early_stopping: EarlyStopping = None, **neural_net_regressor_params):
+    def __init__(self, net, early_stopping: EarlyStopping = None, **l1_regularized_nnr_params):
         self.dataset = None
         self.early_stopping = early_stopping
         self.cpu_count = psutil.cpu_count(logical=True)
         cp['checkpoint'] = Checkpoint(dirname=tempfile.gettempdir())
-        if 'train_split' in neural_net_regressor_params:
-            train_split = neural_net_regressor_params.get('train_split')
+        if 'train_split' in l1_regularized_nnr_params:
+            train_split = l1_regularized_nnr_params.get('train_split')
             if train_split is None:
                 cp['checkpoint'].monitor = 'train_loss_best'
                 if early_stopping is not None:
                     if early_stopping.monitor is 'valid_loss':
                         raise ValueError(
                             'Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.')
-        if 'device' in neural_net_regressor_params:
-            device = neural_net_regressor_params.get('device')
+        if 'device' in l1_regularized_nnr_params:
+            device = l1_regularized_nnr_params.get('device')
         else:
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        neural_net_regressor_params['device'] = device
+        l1_regularized_nnr_params['device'] = device
 
-        self.neural_net_regressor_params = neural_net_regressor_params
+        self.l1_regularized_nnr_params = l1_regularized_nnr_params
         self.ttr = TransformedTargetRegressor(
             regressor=self._get_pipeline(net, cp['checkpoint']),
             transformer=Scaler()
@@ -107,7 +107,7 @@ class TimeSeriesPredictor:
                             _checkpoint,
                             CheckpointHandler()
                         ],
-                        **self.neural_net_regressor_params
+                        **self.l1_regularized_nnr_params
                     )
                 )
             ]
@@ -188,7 +188,7 @@ class TimeSeriesPredictor:
           self.train_split call.
 
         """
-        print(f"Using device {self.neural_net_regressor_params.get('device')}")
+        print(f"Using device {self.l1_regularized_nnr_params.get('device')}")
         self.dataset = dataset
         try:
             self.ttr.fit(dataset.x, dataset.y, **fit_params)
@@ -197,11 +197,12 @@ class TimeSeriesPredictor:
                 warnings.warn(
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
-                self.neural_net_regressor_params['device'] = 'cpu'
+                self.l1_regularized_nnr_params['device'] = 'cpu'
                 self.ttr.regressor = self._get_pipeline(self.ttr.regressor['regressor'].module, cp['checkpoint'])
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
             else:
                 raise
+        return cp['checkpoint']
 
     def score(self, dataset):
         """Compute the mean r2_score of a network on a given dataset.
@@ -240,7 +241,7 @@ class TimeSeriesPredictor:
         losses = [loss[1] for loss in output_list]
         # assert all(loss <= 1 for loss in losses)
 
-        device = self.neural_net_regressor_params.get('device')
+        device = self.l1_regularized_nnr_params.get('device')
         return torch.mean(torch.Tensor(losses).to(device)).cpu().numpy().take(0)
 
 

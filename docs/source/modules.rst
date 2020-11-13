@@ -6,3 +6,4 @@ Modules
 
    time_series_predictor
    min_max_scaler
+   l1_regularized_nnr
