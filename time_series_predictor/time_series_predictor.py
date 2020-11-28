@@ -8,9 +8,10 @@ import warnings
 
 import psutil
 import torch
+from IPython.utils import io
 from skorch.callbacks import Callback, Checkpoint, EarlyStopping
 from time_series_dataset import TimeSeriesDataset
-from IPython.utils import io
+from tune_sklearn import TuneGridSearchCV
 
 from sklearn.pipeline import Pipeline
 
@@ -23,6 +24,7 @@ warnings.filterwarnings("default", category=ResourceWarning)
 
 cp = {}
 
+
 class CheckpointHandler(Callback):
     """CheckpointHandler
 
@@ -33,9 +35,10 @@ class CheckpointHandler(Callback):
         with io.capture_output() as _:
             net.initialize()
             net.set_params(module__input_dim=X.shape[-1],
-                        module__output_dim=y.shape[-1])
+                           module__output_dim=y.shape[-1])
         net.load_params(
             checkpoint=cp['checkpoint'])
+
 
 class InputShapeSetter(Callback):
     """InputShapeSetter
@@ -51,6 +54,7 @@ class InputShapeSetter(Callback):
     def on_train_begin(self, net, X=None, y=None, **kwargs):
         net.set_params(module__input_dim=X.shape[-1],
                        module__output_dim=y.shape[-1])
+
 
 def _get_nnr(net, callbacks, **l1_regularized_nnr_params):
     return L1RegularizedNNR(
@@ -95,20 +99,45 @@ class TimeSeriesPredictor:
             transformer=Scaler()
         )
 
+    def tune_grid_search(
+            self,
+            tunable_params,
+            dataset: TimeSeriesDataset,
+            early_stopping=None,
+            scoring=None,
+            n_jobs=None,
+            sk_n_jobs=-1,
+            cv=5,
+            refit=True,
+            verbose=0,
+            error_score="raise",
+            return_train_score=False,
+            local_dir="~/ray_results",
+            max_iters=1,
+            use_gpu=False,
+            **fit_params):
+        # https://github.com/ray-project/tune-sklearn/blob/master/examples/torch_nn.py
+        gs = TuneGridSearchCV(self.ttr, tunable_params, early_stopping=early_stopping, scoring=scoring, n_jobs=n_jobs,
+                              sk_n_jobs=sk_n_jobs, cv=cv, refit=refit, verbose=verbose, error_score=error_score,
+                              return_train_score=return_train_score, local_dir=local_dir,
+                              max_iters=max_iters, use_gpu=use_gpu)
+        gs.fit(dataset.x, dataset.y, **fit_params)
+        return (gs.best_score_, gs.best_params_)
+
     def _get_pipeline(self, net, _checkpoint):
         return Pipeline(
             [
                 ('input scaler', Scaler()),
                 ('regressor', _get_nnr(
-                        net,
-                        [
-                            InputShapeSetter(),
-                            self.early_stopping,
-                            _checkpoint,
-                            CheckpointHandler()
-                        ],
-                        **self.l1_regularized_nnr_params
-                    )
+                    net,
+                    [
+                        InputShapeSetter(),
+                        self.early_stopping,
+                        _checkpoint,
+                        CheckpointHandler()
+                    ],
+                    **self.l1_regularized_nnr_params
+                )
                 )
             ]
         )
@@ -198,7 +227,8 @@ class TimeSeriesPredictor:
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.l1_regularized_nnr_params['device'] = 'cpu'
-                self.ttr.regressor = self._get_pipeline(self.ttr.regressor['regressor'].module, cp['checkpoint'])
+                self.ttr.regressor = self._get_pipeline(
+                    self.ttr.regressor['regressor'].module, cp['checkpoint'])
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
             else:
                 raise
