@@ -28,6 +28,6 @@ docs/build
 
 # datasets
 docs/source/notebooks/datasets/*.*
-docs/source/_build
-docs/source/_static
+docs/_build
+docs/_static
 docs/artifacts
