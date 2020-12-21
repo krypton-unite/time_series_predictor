@@ -152,9 +152,10 @@ setup(
     ],
     python_requires='>=3.6<3.8',
     install_requires=[
+        'tune-sklearn',
+        'ray[tune]',
         'torch',
         'skorch',
-        'scipy',  # via skorch
         'psutil',
         'time-series-dataset',
         'IPython'

@@ -8,9 +8,10 @@ import warnings
 
 import psutil
 import torch
+from IPython.utils import io
 from skorch.callbacks import Callback, Checkpoint, EarlyStopping
 from time_series_dataset import TimeSeriesDataset
-from IPython.utils import io
+from tune_sklearn import TuneGridSearchCV
 
 from sklearn.pipeline import Pipeline
 
@@ -80,8 +81,9 @@ class TimeSeriesPredictor:
             if train_split is None:
                 cp['checkpoint'].monitor = 'train_loss_best'
                 if early_stopping is not None:
-                    if early_stopping.monitor is 'valid_loss':
+                    if early_stopping.monitor == 'valid_loss':
                         raise ValueError(
+                            # pylint: disable=line-too-long
                             'Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.')
         if 'device' in l1_regularized_nnr_params:
             device = l1_regularized_nnr_params.get('device')
@@ -94,6 +96,46 @@ class TimeSeriesPredictor:
             regressor=self._get_pipeline(net, cp['checkpoint']),
             transformer=Scaler()
         )
+
+    # pylint: disable=invalid-name
+    def tune_grid_search(
+            self,
+            tunable_params,
+            dataset: TimeSeriesDataset,
+            early_stopping=None,
+            scoring=None,
+            n_jobs=None,
+            sk_n_jobs=-1,
+            cv=5,
+            refit=True,
+            verbose=0,
+            error_score="raise",
+            return_train_score=False,
+            local_dir="~/ray_results",
+            max_iters=1,
+            use_gpu=False,
+            **fit_params):
+        """
+        More info at https://github.com/ray-project/tune-sklearn/blob/master/examples/torch_nn.py
+        """
+        grid_search = TuneGridSearchCV(
+            self.ttr,
+            tunable_params,
+            early_stopping=early_stopping,
+            scoring=scoring,
+            n_jobs=n_jobs,
+            sk_n_jobs=sk_n_jobs,
+            cv=cv,
+            refit=refit,
+            verbose=verbose,
+            error_score=error_score,
+            return_train_score=return_train_score,
+            local_dir=local_dir,
+            max_iters=max_iters,
+            use_gpu=use_gpu
+        )
+        grid_search.fit(dataset.x, dataset.y, **fit_params)
+        return (grid_search.best_score_, grid_search.best_params_)
 
     def _get_pipeline(self, net, _checkpoint):
         return Pipeline(
@@ -198,7 +240,8 @@ class TimeSeriesPredictor:
                     '\nSwitching device to cpu to workaround CUDA out of memory problem.',
                     ResourceWarning)
                 self.l1_regularized_nnr_params['device'] = 'cpu'
-                self.ttr.regressor = self._get_pipeline(self.ttr.regressor['regressor'].module, cp['checkpoint'])
+                self.ttr.regressor = self._get_pipeline(
+                    self.ttr.regressor['regressor'].module, cp['checkpoint'])
                 self.ttr.fit(dataset.x, dataset.y, **fit_params)
             else:
                 raise
@@ -242,7 +285,7 @@ class TimeSeriesPredictor:
         # assert all(loss <= 1 for loss in losses)
 
         device = self.l1_regularized_nnr_params.get('device')
-        return torch.mean(torch.Tensor(losses).to(device)).cpu().numpy().take(0)
+        return torch.mean(torch.Tensor(losses, device=device)).cpu().numpy().take(0)
 
 
 class ScoreCalculator(threading.Thread):
