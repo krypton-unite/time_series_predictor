@@ -152,8 +152,8 @@ setup(
     ],
     python_requires='>=3.6<3.8',
     install_requires=[
-        'tune-sklearn',
-        'ray[tune]',
+        # 'tune-sklearn',
+        # 'ray[tune]',
         'torch',
         'skorch',
         'psutil',
@@ -169,7 +169,6 @@ setup(
             'twine',
             'python-dotenv',
             'python-dotenv[cli]',
-            'lxml'
         ],
         'test': [
             'pytest>=4.6',
@@ -178,8 +177,6 @@ setup(
             'seaborn',
             'sklearn',
             'python-dotenv',
-            'lxml',
-            'requests',
             'oze-dataset',
             'flights-time-series-dataset',
             'time-series-models'
@@ -198,7 +195,6 @@ setup(
             'jupyterlab',
             'matplotlib',
             'python-dotenv',
-            'lxml',
             'oze-dataset',
             'flights-time-series-dataset',
             'time-series-models',

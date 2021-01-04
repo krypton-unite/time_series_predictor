@@ -1,0 +1,1 @@
+sphinx-apidoc -o docs/source time_series_predictor

@@ -10,8 +10,9 @@ import psutil
 import torch
 from IPython.utils import io
 from skorch.callbacks import Callback, Checkpoint, EarlyStopping
+from skorch import NeuralNet
 from time_series_dataset import TimeSeriesDataset
-from tune_sklearn import TuneGridSearchCV
+# from tune_sklearn import TuneGridSearchCV
 
 from sklearn.pipeline import Pipeline
 
@@ -29,7 +30,7 @@ class CheckpointHandler(Callback):
 
     """
 
-    def on_train_end(self, net, X=None, y=None, **kwargs):
+    def on_train_end(self, net: NeuralNet, X=None, y=None, **kwargs):
         print("Loading the best network from the last checkpoint.")
         with io.capture_output() as _:
             net.initialize()
@@ -49,7 +50,7 @@ class InputShapeSetter(Callback):
     the input size dynamically.
     """
 
-    def on_train_begin(self, net, X=None, y=None, **kwargs):
+    def on_train_begin(self, net: NeuralNet, X=None, y=None, **kwargs):
         net.set_params(module__input_dim=X.shape[-1],
                        module__output_dim=y.shape[-1])
 
@@ -97,45 +98,45 @@ class TimeSeriesPredictor:
             transformer=Scaler()
         )
 
-    # pylint: disable=invalid-name
-    def tune_grid_search(
-            self,
-            tunable_params,
-            dataset: TimeSeriesDataset,
-            early_stopping=None,
-            scoring=None,
-            n_jobs=None,
-            sk_n_jobs=-1,
-            cv=5,
-            refit=True,
-            verbose=0,
-            error_score="raise",
-            return_train_score=False,
-            local_dir="~/ray_results",
-            max_iters=1,
-            use_gpu=False,
-            **fit_params):
-        """
-        More info at https://github.com/ray-project/tune-sklearn/blob/master/examples/torch_nn.py
-        """
-        grid_search = TuneGridSearchCV(
-            self.ttr,
-            tunable_params,
-            early_stopping=early_stopping,
-            scoring=scoring,
-            n_jobs=n_jobs,
-            sk_n_jobs=sk_n_jobs,
-            cv=cv,
-            refit=refit,
-            verbose=verbose,
-            error_score=error_score,
-            return_train_score=return_train_score,
-            local_dir=local_dir,
-            max_iters=max_iters,
-            use_gpu=use_gpu
-        )
-        grid_search.fit(dataset.x, dataset.y, **fit_params)
-        return (grid_search.best_score_, grid_search.best_params_)
+    # # pylint: disable=invalid-name
+    # def tune_grid_search(
+    #         self,
+    #         tunable_params,
+    #         dataset: TimeSeriesDataset,
+    #         early_stopping=None,
+    #         scoring=None,
+    #         n_jobs=None,
+    #         sk_n_jobs=-1,
+    #         cv=5,
+    #         refit=True,
+    #         verbose=0,
+    #         error_score="raise",
+    #         return_train_score=False,
+    #         local_dir="~/ray_results",
+    #         max_iters=1,
+    #         use_gpu=False,
+    #         **fit_params):
+    #     """
+    #     More info at https://github.com/ray-project/tune-sklearn/blob/master/examples/torch_nn.py
+    #     """
+    #     grid_search = TuneGridSearchCV(
+    #         self.ttr,
+    #         tunable_params,
+    #         early_stopping=early_stopping,
+    #         scoring=scoring,
+    #         n_jobs=n_jobs,
+    #         sk_n_jobs=sk_n_jobs,
+    #         cv=cv,
+    #         refit=refit,
+    #         verbose=verbose,
+    #         error_score=error_score,
+    #         return_train_score=return_train_score,
+    #         local_dir=local_dir,
+    #         max_iters=max_iters,
+    #         use_gpu=use_gpu
+    #     )
+    #     grid_search.fit(dataset.x, dataset.y, **fit_params)
+    #     return (grid_search.best_score_, grid_search.best_params_)
 
     def _get_pipeline(self, net, _checkpoint):
         return Pipeline(

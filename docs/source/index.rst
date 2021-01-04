@@ -38,7 +38,13 @@ This documents the `python package`_ sourced from the following `repository`_.
 Usage
 *****
 
-Please refer to the example provided below.
+Please refer to the examples provided below.
+
+.. toctree::
+   :maxdepth: 2
+      
+   usage.rst
+
 
 **************************
 Documentation for the Code
@@ -46,8 +52,6 @@ Documentation for the Code
 .. toctree::
    :maxdepth: 2
    
-   usage.rst
-   important_required_modules.rst
    modules.rst
 
 Indices and tables
