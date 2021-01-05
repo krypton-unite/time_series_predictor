@@ -30,12 +30,11 @@ class CheckpointHandler(Callback):
 
     """
 
-    def on_train_end(self, net: NeuralNet, X=None, y=None, **kwargs):
+    def on_train_end(self, net: L1RegularizedNNR, X=None, y=None, **kwargs):
         print("Loading the best network from the last checkpoint.")
         with io.capture_output() as _:
             net.initialize()
-            net.set_params(module__input_dim=X.shape[-1],
-                        module__output_dim=y.shape[-1])
+            net.set_input_shape(X, y)
         net.load_params(
             checkpoint=cp['checkpoint'])
 
@@ -50,9 +49,8 @@ class InputShapeSetter(Callback):
     the input size dynamically.
     """
 
-    def on_train_begin(self, net: NeuralNet, X=None, y=None, **kwargs):
-        net.set_params(module__input_dim=X.shape[-1],
-                       module__output_dim=y.shape[-1])
+    def on_train_begin(self, net: L1RegularizedNNR, X=None, y=None, **kwargs):
+        net.set_input_shape(X, y)
 
 def _get_nnr(net, callbacks, **l1_regularized_nnr_params):
     return L1RegularizedNNR(

@@ -8,9 +8,9 @@ from skorch import NeuralNetRegressor
 
 class L1RegularizedNNR(NeuralNetRegressor):
     r""" L1 regularization
-    
+
     .. math:: L_{loss}=\left \| y-\hat{y} \right \|^2+\lambda | W |
-    
+
     L1 regularization makes the weight vector sparse during the optimization process.
 
     The optimizer in PyTorch can only implement L2 regularization, and L1 regularization
@@ -29,3 +29,16 @@ class L1RegularizedNNR(NeuralNetRegressor):
         loss += self.lambda1 * sum([w.abs().sum()
                                     for w in self.module_.parameters()])
         return loss
+
+    def set_input_shape(self, X, y):
+        module_name = self.module.__class__._get_name(self.module)
+        if module_name == 'Transformer':
+            input_dim_param_name = 'd_input'
+            output_dim_param_name = 'd_output'
+        else:
+            input_dim_param_name = 'input_dim'
+            output_dim_param_name = 'output_dim'
+        input_dim_param_name = 'module__'+input_dim_param_name
+        output_dim_param_name = 'module__'+output_dim_param_name
+        args = {input_dim_param_name: X.shape[-1], output_dim_param_name: y.shape[-1]}
+        self.set_params(**args)
