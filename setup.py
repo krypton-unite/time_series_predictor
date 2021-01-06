@@ -136,7 +136,7 @@ setup(
         'synchronize': SyncCommand
     },
     name="time_series_predictor",
-    version="3.0.0",
+    version="3.0.1",
     author="Daniel Kaminski de Souza",
     author_email="daniel@kryptonunite.com",
     description="Time Series Predictor",
