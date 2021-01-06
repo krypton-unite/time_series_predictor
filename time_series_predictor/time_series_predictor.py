@@ -284,7 +284,7 @@ class TimeSeriesPredictor:
         # assert all(loss <= 1 for loss in losses)
 
         device = self.l1_regularized_nnr_params.get('device')
-        return torch.mean(torch.Tensor(losses, device=device)).cpu().numpy().take(0)
+        return torch.mean(torch.Tensor(losses).to(device)).cpu().numpy().take(0)
 
 
 class ScoreCalculator(threading.Thread):
