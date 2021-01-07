@@ -1,49 +1,54 @@
 """early_stopping_test
 """
-from pathlib import Path
+import time
+from datetime import timedelta
 
 import pytest
 import torch
-from flights_time_series_dataset import FlightsDataset
-from oze_dataset import OzeNPZDataset, npz_check
+from torch.optim import Adam
+from flights_time_series_dataset import FlightSeriesDataset
 from skorch.callbacks import EarlyStopping
+from skorch.dataset import CVSplit
 from time_series_models import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
 
-def _get_credentials(user_name, user_password):
-    credentials = {}
-    credentials['user_name'] = user_name
-    credentials['user_password'] = user_password
-    return credentials
-
-def _get_dataset(user_name, user_password):
-    return OzeNPZDataset(
-        dataset_path=npz_check(
-            Path('docs', 'source', 'notebooks', 'datasets'),
-            'dataset',
-            credentials=_get_credentials(user_name, user_password)
-        )
-    )
-
-@pytest.mark.skip
-def test_regular(user_name, user_password):
+# @pytest.mark.skip
+@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+def test_regular(device):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
+    if device == 'cuda':
+        if not torch.cuda.is_available():
+            pytest.skip("needs a CUDA compatible GPU available to run this test")
+
+    start = time.time()
     tsp = TimeSeriesPredictor(
         BenchmarkLSTM(hidden_dim=16),
-        early_stopping=EarlyStopping(patience=30),
-        max_epochs=500,
-        # train_split=None, # default = skorch.dataset.CVSplit(5)
-        optimizer=torch.optim.Adam
+        lr = 1e-3,
+        lambda1=1e-8,
+        optimizer__weight_decay=1e-8,
+        iterator_train__shuffle=True,
+        early_stopping=EarlyStopping(patience=50),
+        max_epochs=250,
+        train_split=CVSplit(10),
+        optimizer=Adam,
+        device=device,
     )
 
-    tsp.fit(_get_dataset(user_name, user_password))
+    past_pattern_length = 24
+    future_pattern_length = 12
+    pattern_length = past_pattern_length + future_pattern_length
+    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length)
+    tsp.fit(fsd)
+    end = time.time()
+    elapsed = timedelta(seconds = end - start)
+    print("Fitting in {} time delta: {}".format(device, elapsed))
     mean_r2_score = tsp.score(tsp.dataset)
     assert mean_r2_score > -100
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_no_train_split():
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -52,43 +57,46 @@ def test_no_train_split():
         TimeSeriesPredictor(
             BenchmarkLSTM(hidden_dim=16),
             early_stopping=EarlyStopping(),
-            max_epochs=500,
-            train_split=None,
-            optimizer=torch.optim.Adam
+            train_split=None
         )
     # pylint: disable=line-too-long
     assert error.match(
         'Select a valid train_split or disable early_stopping! A valid train_split needs to be selected when valid_loss monitor is selected as early stopping criteria.'
     )
 
-@pytest.mark.skip
-def test_train_loss_monitor_no_train_split():
+# @pytest.mark.skip
+@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+@pytest.mark.parametrize('train_split', [None, CVSplit(5)])
+def test_train_loss_monitor(device, train_split):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
-    tsp = TimeSeriesPredictor(
-        BenchmarkLSTM(hidden_dim=10),
-        early_stopping=EarlyStopping(monitor='train_loss', patience=15),
-        max_epochs=150,
-        train_split=None,
-        optimizer=torch.optim.Adam
-    )
-    tsp.fit(FlightsDataset())
-    mean_r2_score = tsp.score(tsp.dataset)
-    assert mean_r2_score > -300
+    if device == 'cuda':
+        if not torch.cuda.is_available():
+            pytest.skip("needs a CUDA compatible GPU available to run this test")
 
-@pytest.mark.skip
-def test_train_loss_monitor(user_name, user_password):
-    """
-    Tests the LSTMTimeSeriesPredictor fitting
-    """
+    start = time.time()
     tsp = TimeSeriesPredictor(
-        BenchmarkLSTM(hidden_dim=10),
-        early_stopping=EarlyStopping(monitor='train_loss', patience=15),
-        max_epochs=150,
-        # train_split=None, # default = skorch.dataset.CVSplit(5)
-        optimizer=torch.optim.Adam
+        BenchmarkLSTM(hidden_dim=16),
+        lr = 1e-3,
+        lambda1=1e-8,
+        optimizer__weight_decay=1e-8,
+        iterator_train__shuffle=True,
+        early_stopping=EarlyStopping(monitor='train_loss', patience=50),
+        max_epochs=250,
+        train_split=train_split,
+        optimizer=Adam,
+        device=device,
     )
-    tsp.fit(_get_dataset(user_name, user_password))
+
+    past_pattern_length = 24
+    future_pattern_length = 12
+    pattern_length = past_pattern_length + future_pattern_length
+    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length)
+    tsp.fit(fsd)
+    end = time.time()
+    elapsed = timedelta(seconds = end - start)
+    print("Fitting in {} time delta: {}".format(device, elapsed))
     mean_r2_score = tsp.score(tsp.dataset)
-    assert mean_r2_score > -300
+    print("Mean R2 Score: {}".format(mean_r2_score))
+    assert mean_r2_score > -100
