@@ -10,7 +10,6 @@ import psutil
 import torch
 from IPython.utils import io
 from skorch.callbacks import Callback, Checkpoint, EarlyStopping
-from skorch import NeuralNet
 from time_series_dataset import TimeSeriesDataset
 # from tune_sklearn import TuneGridSearchCV
 
