@@ -10,12 +10,15 @@ import pytest
 import torch
 from flights_time_series_dataset import FlightsDataset
 from sklearn.metrics import r2_score  # mean_squared_error
+from skorch.callbacks import EarlyStopping
 from time_series_models import BenchmarkLSTM, QuantumLSTM
 from time_series_predictor import TimeSeriesPredictor
 
+from .config import devices
 
-@pytest.mark.skip
-@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+
+# @pytest.mark.skip
+@pytest.mark.parametrize('device', devices)
 def test_quantum_lstm_tsp_fitting(device):
     """
     Tests the Quantum LSTM TimeSeriesPredictor fitting
@@ -25,7 +28,7 @@ def test_quantum_lstm_tsp_fitting(device):
             pytest.skip("needs a CUDA compatible GPU available to run this test")
     tsp = TimeSeriesPredictor(
         QuantumLSTM(),
-        # lr=1E-2,
+        lr=1E-1,
         max_epochs=50,
         train_split=None,
         optimizer=torch.optim.Adam,
@@ -38,10 +41,10 @@ def test_quantum_lstm_tsp_fitting(device):
     elapsed = timedelta(seconds = end - start)
     print("Fitting in {} time delta: {}".format(device, elapsed))
     mean_r2_score = tsp.score(tsp.dataset)
-    assert mean_r2_score > -3
+    assert mean_r2_score > -5
 
 # @pytest.mark.skip
-@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+@pytest.mark.parametrize('device', devices)
 def test_lstm_tsp_forecast(device):
     """
     Tests the LSTMTimeSeriesPredictor forecast
@@ -51,7 +54,9 @@ def test_lstm_tsp_forecast(device):
             pytest.skip("needs a CUDA compatible GPU available to run this test")
     tsp = TimeSeriesPredictor(
         BenchmarkLSTM(hidden_dim=16),
-        max_epochs=250,
+        max_epochs=1000,
+        lr = 1e-4,
+        early_stopping=EarlyStopping(patience=100, monitor='train_loss'),
         train_split=None,
         optimizer=torch.optim.Adam,
         device=device
@@ -61,7 +66,7 @@ def test_lstm_tsp_forecast(device):
     # leave last N months for error assertion
     last_n = 24
     start = time.time()
-    tsp.fit(FlightsDataset(last_n))
+    tsp.fit(FlightsDataset(pattern_length = 120, except_last_n = last_n))
     end = time.time()
     elapsed = timedelta(seconds = end - start)
     print("Fitting in {} time delta: {}".format(device, elapsed))

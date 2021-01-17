@@ -12,9 +12,10 @@ from skorch.dataset import CVSplit
 from time_series_models import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
+from .config import devices
 
 # @pytest.mark.skip
-@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+@pytest.mark.parametrize('device', devices)
 def test_regular(device):
     """
     Tests the LSTMTimeSeriesPredictor fitting
@@ -40,7 +41,7 @@ def test_regular(device):
     past_pattern_length = 24
     future_pattern_length = 12
     pattern_length = past_pattern_length + future_pattern_length
-    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length)
+    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length, stride=1)
     tsp.fit(fsd)
     end = time.time()
     elapsed = timedelta(seconds = end - start)
@@ -65,7 +66,7 @@ def test_no_train_split():
     )
 
 # @pytest.mark.skip
-@pytest.mark.parametrize('device', ['cuda', 'cpu'])
+@pytest.mark.parametrize('device', devices)
 @pytest.mark.parametrize('train_split', [None, CVSplit(5)])
 def test_train_loss_monitor(device, train_split):
     """
@@ -92,7 +93,7 @@ def test_train_loss_monitor(device, train_split):
     past_pattern_length = 24
     future_pattern_length = 12
     pattern_length = past_pattern_length + future_pattern_length
-    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length)
+    fsd = FlightSeriesDataset(pattern_length, past_pattern_length, pattern_length, stride=1)
     tsp.fit(fsd)
     end = time.time()
     elapsed = timedelta(seconds = end - start)

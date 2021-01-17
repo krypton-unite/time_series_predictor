@@ -173,9 +173,6 @@ setup(
         'test': [
             'pytest>=4.6',
             'pytest-cov',
-            'pandas',
-            'seaborn',
-            'sklearn',
             'python-dotenv',
             'oze-dataset',
             'flights-time-series-dataset',
