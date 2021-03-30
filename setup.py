@@ -154,7 +154,6 @@ setup(
     install_requires=[
         # 'tune-sklearn',
         # 'ray[tune]',
-        'torch',
         'skorch',
         'psutil',
         'time-series-dataset',

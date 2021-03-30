@@ -1,5 +1,5 @@
 # Virtualenv
-/.env/
+/.venv/
 
 # Package
 *.egg-info

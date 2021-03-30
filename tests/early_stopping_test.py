@@ -13,6 +13,7 @@ from time_series_models import BenchmarkLSTM
 from time_series_predictor import TimeSeriesPredictor
 
 from .config import devices
+from .helpers import cuda_check
 
 # @pytest.mark.skip
 @pytest.mark.parametrize('device', devices)
@@ -20,9 +21,7 @@ def test_regular(device):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
-    if device == 'cuda':
-        if not torch.cuda.is_available():
-            pytest.skip("needs a CUDA compatible GPU available to run this test")
+    cuda_check(device)
 
     start = time.time()
     tsp = TimeSeriesPredictor(
@@ -72,9 +71,7 @@ def test_train_loss_monitor(device, train_split):
     """
     Tests the LSTMTimeSeriesPredictor fitting
     """
-    if device == 'cuda':
-        if not torch.cuda.is_available():
-            pytest.skip("needs a CUDA compatible GPU available to run this test")
+    cuda_check(device)
 
     start = time.time()
     tsp = TimeSeriesPredictor(
