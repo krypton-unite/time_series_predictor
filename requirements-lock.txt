@@ -65,9 +65,9 @@ numpy==1.20.2 \
     #   skorch
     #   time-series-dataset
     #   torch
-parso==0.8.1 \
-    --hash=sha256:15b00182f472319383252c18d5913b69269590616c947747bc50bf4ac768f410 \
-    --hash=sha256:8519430ad07087d4c997fda3a7918f7cfa27cb58972a8c89c2a0295a1c940e9e
+parso==0.8.2 \
+    --hash=sha256:12b83492c6239ce32ff5eed6d3639d6a536170723c6f3f1506869f1ace413398 \
+    --hash=sha256:a8c4922db71e4fdb90e0d0bc6e50f9b273d3397925e5e60a717e719201778d22
     # via jedi
 pickleshare==0.7.5 \
     --hash=sha256:87683d47965c1da65cdacaf31c8441d12b8044cdec9aca500cd78fc2c683afca \
@@ -186,14 +186,7 @@ time-series-dataset==0.0.8 \
     --hash=sha256:d0b51056de9ed7e72871182fbeaf2ec924d9a7c2ae482f693d2d272cd026f128
     # via time-series-predictor (setup.py)
 torch==1.8.0+cu111 \
-    --hash=sha256:234fd1346151c6ec5855464c1307079bd62273d10cbe371bc7b59d6195558a6e \
-    --hash=sha256:3646902f5034bd30c0b065aeeb4d0721153582a3a92547ac10d1175b182f0092 \
-    --hash=sha256:457593b4f70afa6e929d242e5045c3ca6f00064e309ba4771ff0ced63c9df005 \
-    --hash=sha256:7dd1ca9bfa7ddb1c646a6608e28672991f876e26e3bf32387164dc4adfdf36f5 \
-    --hash=sha256:9ec837640bcf230e0aa8203e79fefae18cdf32f056298bb0ccfd453f456c6b4f \
-    --hash=sha256:c5d7fd9b53ba48f9dc0645651ee8f540eb024404ccfeaf73c40764d9bb329709 \
-    --hash=sha256:e0d62202461f1979b7a2b2d3f18e5d89ea5130083e5b325e967732db3269f87a \
-    --hash=sha256:f641a95dbea6a3e9a450fbee6976ee6cbfa802a5d77c1dc1cef9929967887ab6
+    --hash=sha256:3646902f5034bd30c0b065aeeb4d0721153582a3a92547ac10d1175b182f0092
     # via time-series-dataset
 tqdm==4.59.0 \
     --hash=sha256:9fdf349068d047d4cfbe24862c425883af1db29bcddf4b0eeb2524f6fbdb23c7 \

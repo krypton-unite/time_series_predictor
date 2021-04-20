@@ -142,7 +142,7 @@ setup(
     description="Time Series Predictor",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://timeseriespredictor.readthedocs.io/",
+    url="https://time-series-predictor.readthedocs.io/",
     packages=find_packages(exclude=("tests",)),
     package_data={'': extra_files},
     classifiers=[
