@@ -15,8 +15,8 @@ Time Series Predictor documentation
    :target: https://time-series-predictor.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://travis-ci.org/krypton-unite/time_series_predictor.svg?branch=master
-   :target: https://travis-ci.org/github/krypton-unite/time_series_predictor
+.. image:: https://app.travis-ci.com/krypton-unite/time_series_predictor.svg?branch=master
+   :target: https://app.travis-ci.com/github/krypton-unite/time_series_predictor
    :alt: Travis
 
 .. image:: https://codecov.io/gh/krypton-unite/time_series_predictor/branch/master/graph/badge.svg
@@ -26,6 +26,10 @@ Time Series Predictor documentation
 .. image:: https://img.shields.io/github/license/krypton-unite/time_series_predictor
    :target: https://github.com/krypton-unite/time_series_predictor
    :alt: GitHub license
+
+.. image:: https://requires.io/github/krypton-unite/time_series_predictor/requirements.svg?branch=master
+   :target: https://requires.io/github/krypton-unite/time_series_predictor/requirements/?branch=master
+   :alt: Requirements Status
 
 Welcome to Time Series Predictor's documentation!
 
