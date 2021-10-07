@@ -19,7 +19,7 @@ from .helpers import cuda_check
 
 
 # @pytest.mark.skip
-@pytest.mark.parametrize('device', ['cpu'])
+@pytest.mark.parametrize('device', devices)
 def test_quantum_lstm_tsp_fitting(device):
     """
     Tests the Quantum LSTM TimeSeriesPredictor fitting

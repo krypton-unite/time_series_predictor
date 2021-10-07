@@ -11,13 +11,15 @@ def pytest_addoption(parser):
     Args:
         parser ([type]): [description]
     """
-    load_dotenv(Path('test', '.env.test.local'))
+    load_dotenv(Path('tests', '.env.test.local'))
     challenge_user_name = os.getenv("CHALLENGE_USER_NAME")
     challenge_user_password = os.getenv("CHALLENGE_USER_PASSWORD")
+    username_to_use = challenge_user_name if challenge_user_name else "your_user_name"
     parser.addoption("--user_name", action="store",
-                     default=challenge_user_name if challenge_user_name else "your_user_name")
+                     default=username_to_use)
+    userpassword_to_use = challenge_user_password if challenge_user_password else "your_password"
     parser.addoption("--user_password", action="store",
-                     default=challenge_user_password if challenge_user_password else "your_password")
+                     default=userpassword_to_use)
 
 
 def pytest_generate_tests(metafunc):

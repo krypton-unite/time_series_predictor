@@ -31,3 +31,4 @@ docs/source/notebooks/datasets/*.*
 docs/_build
 docs/_static
 docs/artifacts
+datasets

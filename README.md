@@ -1,6 +1,6 @@
 # Time Series Predictor
 
-[![PyPI version](https://badge.fury.io/py/time-series-predictor.svg)](https://badge.fury.io/py/time-series-predictor) [![Documentation Status](https://readthedocs.org/projects/time-series-predictor/badge/?version=latest)](https://time-series-predictor.readthedocs.io/en/latest/?badge=latest) [![travis](https://travis-ci.org/krypton-unite/time_series_predictor.svg?branch=master)](https://travis-ci.org/github/krypton-unite/time_series_predictor) [![codecov](https://codecov.io/gh/krypton-unite/time_series_predictor/branch/master/graph/badge.svg)](https://codecov.io/gh/krypton-unite/time_series_predictor) [![GitHub license](https://img.shields.io/github/license/krypton-unite/time_series_predictor)](https://github.com/krypton-unite/time_series_predictor)
+[![PyPI version](https://badge.fury.io/py/time-series-predictor.svg)](https://badge.fury.io/py/time-series-predictor) [![Documentation Status](https://readthedocs.org/projects/time-series-predictor/badge/?version=latest)](https://time-series-predictor.readthedocs.io/en/latest/?badge=latest) [![travis](https://app.travis-ci.com/krypton-unite/time_series_predictor.svg?branch=master)](https://app.travis-ci.com/github/krypton-unite/time_series_predictor) [![codecov](https://codecov.io/gh/krypton-unite/time_series_predictor/branch/master/graph/badge.svg)](https://codecov.io/gh/krypton-unite/time_series_predictor) [![GitHub license](https://img.shields.io/github/license/krypton-unite/time_series_predictor)](https://github.com/krypton-unite/time_series_predictor) [![Requirements Status](https://requires.io/github/krypton-unite/time_series_predictor/requirements.svg?branch=master)](https://requires.io/github/krypton-unite/time_series_predictor/requirements/?branch=master)
 
 ## Usage
 
@@ -14,19 +14,13 @@ Please refer to the following examples:
 ### Windows
 
 ```powershell
-python -m venv .\.env
-.\.env\Scripts\activate
-pip install pip-tools
-python setup.py synchronize
+.\scrips\init-env.ps1
 ```
 
 #### Linux or MacOS
 
 ```bash
-python -m venv .env
-. .env/bin/activate
-pip install pip-tools
-python setup.py synchronize
+./scripts/init-env.sh
 ```
 
 --------
