@@ -30,7 +30,8 @@ from sklearn.utils import check_array, check_random_state
 from sklearn.utils._seq_dataset import (ArrayDataset32, ArrayDataset64,
                                         CSRDataset32, CSRDataset64)
 from sklearn.utils.extmath import safe_sparse_dot
-from sklearn.utils.fixes import sparse_lsqr
+# from sklearn.utils.fixes import sparse_lsqr
+from scipy.sparse.linalg import lsqr as sparse_lsqr
 from sklearn.utils.sparsefuncs import inplace_column_scale, mean_variance_axis
 from sklearn.utils.validation import (FLOAT_DTYPES, _check_sample_weight,
                                       _deprecate_positional_args,
